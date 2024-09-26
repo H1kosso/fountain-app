@@ -16,7 +16,10 @@ Drawer {
 
             delegate: Button{
                 text: model.value
-                onClicked: contentRoot.state = model.value
+                onClicked: {
+                    contentRoot.state = model.value
+                    menu.close()
+                }
             }
         }
     }

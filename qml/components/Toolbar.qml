@@ -5,12 +5,14 @@ Rectangle{
     color: "blue"
 
     Row{
-        anchors.verticalCenter: parent.verticalCenter
+        anchors.fill: parent
         height: 35
+        spacing: 10
 
-        Button{
+        ToolButton{
             text: "drawer open"
             onClicked: menu.open()
+            anchors.verticalCenter: parent.verticalCenter
         }
     }
 }

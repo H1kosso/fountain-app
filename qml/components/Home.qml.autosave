@@ -15,7 +15,7 @@ Rectangle{
         }
 
         Image{
-            source: 'qrc:/assets/img/dog.jpg'
+            source: 'qrc:/assets/img/dog.jpg '
         }
 
         Repeater{

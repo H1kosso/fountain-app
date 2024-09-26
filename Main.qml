@@ -1,6 +1,8 @@
 import QtQuick
 import QtQuick.Controls
 import "./qml/components"
+import com.fountain
+
 
 ApplicationWindow {
     width: 640
@@ -52,8 +54,6 @@ ApplicationWindow {
                     id: paintAnimation
                 }
             }
-
-
         }
 
         state: "home"

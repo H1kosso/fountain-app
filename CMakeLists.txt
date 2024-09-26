@@ -1,47 +1,42 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.27)
 
-project(FountainApp VERSION 0.1 LANGUAGES CXX)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Gui Quick Sql)
 
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+qt_standard_project_setup(REQUIRES 6.5)
 
-find_package(Qt6 6.4 REQUIRED COMPONENTS Quick)
+set(QML_FILES
+    main.qml
+    qml/components/Home.qml
+    qml/components/Menu.qml
+    qml/components/PaintAnimation.qml
+    qml/components/Settings.qml
+    qml/components/Toolbar.qml
+)
 
-qt_standard_project_setup()
-
-qt_add_executable(appFountainApp
+qt_add_executable( fountain
     main.cpp
 )
 
-qt_add_qml_module(appFountainApp
-    URI FountainApp
-    VERSION 1.0
-    QML_FILES Main.qml
-              qml/components/Menu.qml
-              qml/components/Toolbar.qml
+qt_add_resources(fountain "fountain_assets"
+    PREFIX "/"
+    BIG_RESOURCES
+    FILES
+        assets/img/dog.jpg
 
-              qml/components/PaintAnimation.qml
-              qml/components/Home.qml
-              qml/components/Settings.qml
 )
 
-# Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
-# If you are developing for iOS or macOS you should consider setting an
-# explicit, fixed bundle identifier manually though.
-set_target_properties(appFountainApp PROPERTIES
-#    MACOSX_BUNDLE_GUI_IDENTIFIER com.example.appFountainApp
-    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-    MACOSX_BUNDLE TRUE
+qt_add_qml_module(fountain
+    URI com.fountain
+    VERSION 1.0
+    NO_RESOURCE_TARGET_PATH
+    DEPENDENCIES QtQuick
+    QML_FILES ${QML_FILES}
+    SOURCES
+    singleimage.cpp singleimage.h
+
+)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+set_target_properties(fountain PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
-
-target_link_libraries(appFountainApp
-    PRIVATE Qt6::Quick
-)
-
-include(GNUInstallDirs)
-install(TARGETS appFountainApp
-    BUNDLE DESTINATION .
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
+target_link_libraries(fountain PRIVATE Qt6::Gui Qt6::Quick)
