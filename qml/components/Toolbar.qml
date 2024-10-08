@@ -1,15 +1,18 @@
 import QtQuick
 import QtQuick.Controls
+import "../controls"
 Rectangle{
     height: 40
-    color: "blue"
+    color: theme.toolbar
 
     Row{
-        anchors.fill: parent
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.left: parent.left
+        anchors.leftMargin: 15
         height: 35
         spacing: 10
 
-        ToolButton{
+        ToolbarButton{
             text: "drawer open"
             onClicked: menu.open()
             anchors.verticalCenter: parent.verticalCenter

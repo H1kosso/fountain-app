@@ -11,6 +11,11 @@ set(QML_FILES
     qml/components/PaintAnimation.qml
     qml/components/Settings.qml
     qml/components/Toolbar.qml
+
+    qml/utils/MyTheme.qml
+
+    qml/controls/MenuButton.qml
+    qml/controls/ToolbarButton.qml
 )
 
 qt_add_executable( fountain

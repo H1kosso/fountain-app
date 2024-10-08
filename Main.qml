@@ -1,14 +1,17 @@
 import QtQuick
 import QtQuick.Controls
-import "./qml/components"
 import com.fountain
+
+import "./qml/components"
+import "./qml/utils"
+
 
 
 ApplicationWindow {
     width: 640
     height: 480
     visible: true
-    title: qsTr("Hello World")
+    title: qsTr("Fountain app")
 
     header: Toolbar{
         id: toolbar
@@ -21,8 +24,9 @@ ApplicationWindow {
     }
 
     Rectangle{
-        color: "red"
         id: contentRoot
+
+        color: theme.appBackground
         anchors {
             left: parent.left
             right: parent.right
@@ -36,7 +40,6 @@ ApplicationWindow {
             flickableDirection: Flickable.VerticalFlick
             boundsBehavior: Flickable.StopAtBounds
             contentHeight: contentColumn.height
-
 
             Column{
                 id: contentColumn
@@ -54,6 +57,9 @@ ApplicationWindow {
                     id: paintAnimation
                 }
             }
+        }
+        MyTheme{
+            id: theme
         }
 
         state: "home"
