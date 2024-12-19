@@ -19,6 +19,7 @@ Drawer {
                 ListElement{ value: "home" }
                 ListElement{ value: "settings" }
                 ListElement{ value: "paintAnimation" }
+                ListElement{ value: "gallery"}
             }
 
             delegate: MenuButton{

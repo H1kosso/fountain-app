@@ -56,31 +56,45 @@ ApplicationWindow {
                 PaintAnimation{
                     id: paintAnimation
                 }
+
+                Gallery{
+                    id: gallery
+                }
             }
         }
         MyTheme{
             id: theme
         }
 
-        state: "home"
+        state: "settings"
         states: [
             State{
                 name: "home"
                 PropertyChanges { target: home; visible: true}
                 PropertyChanges { target: settings; visible: false}
                 PropertyChanges { target: paintAnimation; visible: false}
+                PropertyChanges { target: gallery; visible: false}
             },
             State{
                 name: "settings"
                 PropertyChanges { target: home; visible: false}
                 PropertyChanges { target: settings; visible: true}
                 PropertyChanges { target: paintAnimation; visible: false}
+                PropertyChanges { target: gallery; visible: false}
             },
             State{
                 name: "paintAnimation"
                 PropertyChanges { target: home; visible: false}
                 PropertyChanges { target: settings; visible: false}
                 PropertyChanges { target: paintAnimation; visible: true}
+                PropertyChanges { target: gallery; visible: false}
+            },
+            State{
+                name: "gallery"
+                PropertyChanges { target: home; visible: false}
+                PropertyChanges { target: settings; visible: false}
+                PropertyChanges { target: paintAnimation; visible: false}
+                PropertyChanges { target: gallery; visible: true}
             }
         ]
     }

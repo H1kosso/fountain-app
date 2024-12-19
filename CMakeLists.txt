@@ -11,11 +11,15 @@ set(QML_FILES
     qml/components/PaintAnimation.qml
     qml/components/Settings.qml
     qml/components/Toolbar.qml
+    qml/components/Gallery.qml
 
     qml/utils/MyTheme.qml
+    qml/utils/ApiManager.qml
+    qml/utils/WebSocketManager.qml
 
     qml/controls/MenuButton.qml
     qml/controls/ToolbarButton.qml
+    qml/controls/ColorPicker.qml
 )
 
 qt_add_executable( fountain
@@ -38,7 +42,6 @@ qt_add_qml_module(fountain
     QML_FILES ${QML_FILES}
     SOURCES
     singleimage.cpp singleimage.h
-
 )
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 set_target_properties(fountain PROPERTIES
