@@ -13,6 +13,8 @@ ApplicationWindow {
     visible: true
     title: qsTr("Fountain app")
 
+    property bool isBTconnected: true
+
     header: Toolbar{
         id: toolbar
     }
@@ -21,6 +23,29 @@ ApplicationWindow {
         id: menu
         height: parent.height
         width: 250
+    }
+
+    Item{
+        id: config
+
+        property int mode: 0
+        property bool enableWeekends: false
+        property int workTime: 0
+        property int idleTime: 0
+        property var mailList: []
+        property int pictureSize: 0
+        property var pictureData: []
+        property int workRangeFrom: 0
+        property int workRangeTo: 0
+        property color main
+        property color secondary
+    }
+
+    Item{
+        id: fountainState
+        property int mode: 0
+        property int fluidLevel: 0
+        property bool isPresenting: false
     }
 
     Rectangle{
@@ -66,7 +91,7 @@ ApplicationWindow {
             id: theme
         }
 
-        state: "settings"
+        state: "gallery"
         states: [
             State{
                 name: "home"

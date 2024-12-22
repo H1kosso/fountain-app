@@ -10,24 +10,7 @@ Rectangle{
     height: column.height
     color: "lightgreen"
 
-    Item{
-        id: config
 
-        property int mode: 0
-        onModeChanged: console.log(this.mode)
-        property bool enableWeekends: false
-        property int workTime: 0
-        property int idleTime: 0
-        property var mailList: []
-        property int pictureSize: 0
-        property var pictureData: []
-        property int workRangeFrom: 0
-        property int workRangeTo: 0
-        property color main
-        property color secondary
-
-
-    }
 
     Column{
         id: column
@@ -182,14 +165,16 @@ Rectangle{
     }
     Component.onCompleted: {
         apiManager.login(function() {
-            apiManager.getConfig(function() {
-                    colorPicker.value = config.main
-                    console.log("All operations completed in sequence");
+            apiManager.loginLocal(function(){
+                apiManager.getConfig(function() {
+                    apiManager.getState(function(){
+                        colorPicker.value = config.main
+                        console.log("All operations completed in sequence");
+                    });
                 });
+            });
         });
     }
-
-
 
     ApiManager{
         id: apiManager

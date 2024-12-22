@@ -1,6 +1,5 @@
 import QtQuick
 import com.fountain
-
 Item {
     id: root
 
@@ -10,6 +9,7 @@ Item {
     property string password: "2bad_its!working."
 
     property string loginToken: ""
+    property string loginLocalToken: ""
 
     function getConfig(callback) {
         const request = new XMLHttpRequest()
@@ -111,4 +111,74 @@ Item {
         request.send(JSON.stringify(data));
     }
 
+    function loginLocal(callback) {
+        const request = new XMLHttpRequest();
+
+        request.onreadystatechange = function() {
+            if (request.readyState === XMLHttpRequest.DONE) {
+                if (request.status && request.status === 200) {
+                    console.log("login response", request.responseText);
+                    var result = JSON.parse(request.responseText)
+
+                    loginLocalToken = result.token
+                    if (callback) callback()
+                } else {
+                    console.log("HTTP login:", request.status, request.statusText);
+                }
+            }
+        };
+
+        request.open("POST", "http://localhost:3100/api/dashboard/login", true);
+
+        request.setRequestHeader("Content-Type", "application/json");
+
+        const data = {
+            "username": "at_admin",
+            "password": "hF7Ya8yEPLXdzGMv4swC9Ue6fb3m5c"
+        };
+
+        request.send(JSON.stringify(data));
+    }
+
+    function getState(callback){
+        const request = new XMLHttpRequest()
+        request.onreadystatechange = function() {
+            if (request.readyState === XMLHttpRequest.DONE) {
+                if (request.status && request.status === 200) {
+                    console.log("getState response", request.responseText)
+                    var result = JSON.parse(request.responseText)
+
+                    fountainState.mode = result.mode
+                    fountainState.fluidLevel = result.fluidLevel
+                    fountainState.isPresenting = result.isPresenting
+                    if (callback) callback()
+                } else {
+                    console.log("HTTP get:", request.status, request.statusText)
+                }
+            }
+        }
+        request.open("GET", "http://localhost:3100/api/dashboard/state", true)
+        //request.setRequestHeader("Authorization", "Basic " + Qt.btoa(username + ":" + password))
+        request.setRequestHeader("Authorization", "Bearer " + loginLocalToken);
+        request.send()
+    }
+
+    function getAllPictures(callback){
+        const request = new XMLHttpRequest()
+        request.onreadystatechange = function() {
+            if (request.readyState === XMLHttpRequest.DONE) {
+                if (request.status && request.status === 200) {
+                    //console.log("getAllPictures response", request.responseText)
+                    var result = JSON.parse(request.responseText)
+                    if (callback) callback(result)
+                } else {
+                    console.log("HTTP get:", request.status, request.statusText)
+                }
+            }
+        }
+        request.open("GET", "http://localhost:3100/api/dashboard/pictures", true)
+        //request.setRequestHeader("Authorization", "Basic " + Qt.btoa(username + ":" + password))
+        request.setRequestHeader("Authorization", "Bearer " + loginLocalToken);
+        request.send()
+    }
 }

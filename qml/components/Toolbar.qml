@@ -17,5 +17,10 @@ Rectangle{
             onClicked: menu.open()
             anchors.verticalCenter: parent.verticalCenter
         }
+
+        Button{
+            text: "Toggle BT connection"
+            onClicked: isBTconnected = !isBTconnected
+        }
     }
 }

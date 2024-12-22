@@ -7,52 +7,40 @@ Rectangle {
     width: parent.width - 10
     anchors.horizontalCenter: parent.horizontalCenter
     height: content.height
-    color: "orange"
 
     SingleImage {
         id: singleImage
-        property int test: 1
-        image: [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,]]
     }
-    Item{
+
+    Item {
         id: content
         width: parent.width
-        height: column.height + paintMenu.height  + 50
-        Row{
+        height: column.height + paintMenu.height + 50
+
+        Row {
             id: paintMenu
             anchors.top: parent.top
             spacing: 8
             property int brushMode: 1
-            Button {
-                text: "Add new row"
-                onClicked: {
-                    var newRow = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,]];
-                    singleImage.image = singleImage.image.concat(newRow);
-                }
-            }
 
             Button {
-                text: "Add 5 rows"
-                onClicked: {
-                    var newRow = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,]];
-                    for( var i = 0 ; i < 5 ; i++)
-                        singleImage.image = singleImage.image.concat(newRow);
-                }
-            }
-
-            Button{
                 text: "Paint"
                 onClicked: parent.brushMode = 1
             }
 
-            Button{
+            Button {
                 text: "Erase"
                 onClicked: parent.brushMode = 0
             }
+            Button {
+                text: "add row"
+                onClicked: singleImage.addRow()
+            }
 
             Button{
-                text: "Clear all"
-                onClicked: singleImage.image = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,]]
+                text: singleImage.colorAt(1, 1)
+                onClicked:  text = singleImage.colorAt(1, 1)
+
             }
         }
 
@@ -65,42 +53,40 @@ Rectangle {
 
             Repeater {
                 id: columnRepeater
-                model: singleImage.image.length
-                delegate: Row{
-                    Repeater{
+                model: singleImage.size
+                delegate: Row {
+                    Repeater {
                         id: rowRepeater
                         property int columnIndex: index
-                        model: singleImage.image[index].length
+                        model: singleImage.rowLength()
 
                         delegate: Rectangle {
                             id: pixel
-                            width: root.width/64
+                            width: root.width / 64
                             height: width
-                            color: singleImage.image[rowRepeater.columnIndex][index] !== 0 ? "red" : "black"
+                            color: singleImage[index * rowRepeater.columnIndex] === 1 ? config.main : config.secondary
                         }
                     }
                 }
             }
         }
-        MouseArea{
+
+        MouseArea {
             anchors.fill: column
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
-            onMouseYChanged: if(containsPress) colorPixel()
-            onMouseXChanged: if(containsPress) colorPixel()
+            onMouseYChanged: if (containsPress) colorPixel()
+            onMouseXChanged: if (containsPress) colorPixel()
             preventStealing: true
 
-            function colorPixel(){
+            function colorPixel() {
                 var indexX = Math.floor(mouseX/(root.width/64))
                 var indexY = Math.floor(mouseY/(root.width/64))
 
-                singleImage.image[indexY][indexX] = paintMenu.brushMode
-
+                singleImage.setColorAt(indexY, indexX, paintMenu.brushMode)
+                var targetRect = columnRepeater.itemAt(indexY).children[indexX]
+                targetRect.color = paintMenu.brushMode === 1 ? config.main : config.secondary
             }
         }
-
     }
-
-
-
 }

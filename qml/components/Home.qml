@@ -14,10 +14,11 @@ Item{
             text: "Home"
         }
 
-        Repeater{
-            model: 100
-            delegate: Text{
-                text: model.index
+
+
+        Column{
+            Text{
+                text:fountainState.fluidLevel
             }
         }
     }
