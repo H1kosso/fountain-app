@@ -38,7 +38,7 @@ ApplicationWindow {
         property int workRangeFrom: 0
         property int workRangeTo: 0
         property color main
-        property color secondary
+        property color secondary : "red"
     }
 
     Item{

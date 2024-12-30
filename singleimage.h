@@ -21,8 +21,6 @@ public:
 
     Q_INVOKABLE int rowLength() const { return 64; }
 
-    void setHasColors(bool newHasColors);
-
     QVariantList image() const;
     void setImage(const QVariantList &newImage);
 

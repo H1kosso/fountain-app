@@ -1,5 +1,6 @@
 import QtQuick
 import "../utils"
+import ".//gallery"
 
 Rectangle {
     id: root
@@ -17,48 +18,110 @@ Rectangle {
             id: picturesRepeater
             model: ListModel{}
 
-            delegate: Rectangle{
+            delegate: Item{
+                id: delegateImage
                 width: (root.width - 24)/4
-                height: width
-                color: index % 2 ? "red" : "black"
+                height: Math.min(width, column.height)
 
-                Item{
-                    id: pictureDelegate
-                    anchors.fill: parent
-                    property var pictureData: []
-                    property var binaryMatrix: [] // Dwuwymiarowa tablica dla danych binarnych
+                property var pictureData: []
+                property var binaryMatrix: []
 
-                    Component.onCompleted:{
-                        // Parsowanie JSON i konwersja liczb na binarne
-                        pictureData = JSON.parse(model.data);
+                ImageInfo{
+                    id: imageInfo
+                }
 
-                        // Tworzenie dwuwymiarowej tablicy
-                        binaryMatrix = pictureData.map(function(num) {
-                            var binaryString = num.toString(2); // Zamiana liczby na binarną postać
-                            var binaryArray = binaryString.split('').map(function(digit) {
-                                return parseInt(digit);  // Zamiana na cyfry (0 lub 1)
-                            });
-                            return binaryArray; // Zwrócenie tablicy z cyframi binarnymi
+                Column {
+                    id: column
+                    width: parent.width
+                    anchors.top: parent.top
+                    anchors.left: parent.left
+
+                    Repeater {
+                        id: rowRepeater
+                        model: imageInfo.model
+                        property ListModel aliasModel: model
+                        delegate: RowDelegate{
+                            width: parent.width
+
+                            Component.onCompleted: {
+                                for (var j = 0; j < imageInfo._rowLength ; j++) {
+                                    var propertyName = "valueCol" + j;
+                                    valueModel.append({"value": model[propertyName]})
+                                }
+                            }
+                        }
+                    }
+                }
+
+                Rectangle{
+                    color: "red"
+                    width: 10
+                    height: width
+
+                    anchors.right: parent.right
+                    anchors.rightMargin: 5
+                    anchors.top: parent.top
+                    anchors.topMargin: 5
+
+                    MouseArea{
+                        anchors.fill: parent
+                        onClicked: {
+                            galleryApiManager.deletePicture(imageInfo._id);
+                            getPictures();
+                        }
+                    }
+                }
+
+                Component.onCompleted:{
+                    pictureData = JSON.parse(model.data);
+
+                    binaryMatrix = pictureData.map(function(num) {
+
+                        var binaryString = num.toString(2); // Zamiana liczby na binarną postać
+
+                        var binaryArray = binaryString.split('').map(function(digit) {
+                            return parseInt(digit);
                         });
-                        //console.log("Binary Matrix: ", binaryMatrix);
+                        return binaryArray;
+                    });
+
+                    if (imageInfo.model.count > 0) {
+                        for( var i = 0 ; i  < imageInfo.model.count ; i++){
+                            var listModelRow = imageInfo.model.get(i)
+                            var newRow = []
+                            for (var j = 0; j < 64; j++) {
+                                var propertyName = "valueCol" + j;
+                                newRow.push(listModelRow[propertyName]);
+                            }
+                            imageInfo.image.push(newRow)
+                        }
                     }
 
+                    imageInfo.size = model.size
+                    imageInfo._id = model._id
+                    imageInfo.arrayToListModel(binaryMatrix)
                 }
+
             }
         }
     }
 
     Component.onCompleted: {
+        getPictures()
+    }
+
+    function getPictures(){
         galleryApiManager.loginLocal(function(){
             galleryApiManager.getAllPictures(function(pictures){
+                picturesRepeater.model.clear();
                 for(var i = 0 ; i < pictures.length ; i++){
                     var pictureData = JSON.stringify(pictures[i].data);
 
                     picturesRepeater.model.append({
-                        "_id": pictures[i]._id,
-                        "size": pictures[i].size,
-                        "data": pictureData
-                    });
+                                                      "_id": pictures[i]._id,
+                                                      "size": pictures[i].size,
+                                                      "data": pictureData
+                                                  });
                 }
             });
         });

@@ -4,7 +4,7 @@ SingleImage::SingleImage(QObject *parent)
     : QObject{parent},
     m_mainColor(Qt::red),
     m_secondaryColor(Qt::black),
-    m_size(32)
+    m_size(64)
 {
     fillImage(m_size);
 }

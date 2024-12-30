@@ -181,4 +181,22 @@ Item {
         request.setRequestHeader("Authorization", "Bearer " + loginLocalToken);
         request.send()
     }
+
+    function deletePicture(id, callback){
+        const request = new XMLHttpRequest()
+        request.onreadystatechange = function() {
+            if (request.readyState === XMLHttpRequest.DONE) {
+                if (request.status && request.status === 200) {
+                    var result = JSON.parse(request.responseText)
+                    if (callback) callback(result)
+                } else {
+                    console.log("HTTP delete:", request.status, request.statusText)
+                }
+            }
+        }
+        request.open("DELETE", "http://localhost:3100/api/dashboard/pictures/"+id, true)
+        //request.setRequestHeader("Authorization", "Basic " + Qt.btoa(username + ":" + password))
+        request.setRequestHeader("Authorization", "Bearer " + loginLocalToken);
+        request.send()
+    }
 }
