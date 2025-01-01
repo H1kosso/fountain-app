@@ -6,7 +6,7 @@ Rectangle {
     id: root
     width: parent.width - 10
     anchors.horizontalCenter: parent.horizontalCenter
-    height: contentColumn.height + 20
+    height: contentColumn.height + contentColumn.y * 2
 
     Grid{
         id: contentColumn
@@ -79,9 +79,14 @@ Rectangle {
 
                         var binaryString = num.toString(2); // Zamiana liczby na binarną postać
 
+                        while (binaryString.length < 64) {
+                            binaryString = "0" + binaryString;
+                        }
+
                         var binaryArray = binaryString.split('').map(function(digit) {
                             return parseInt(digit);
                         });
+
                         return binaryArray;
                     });
 

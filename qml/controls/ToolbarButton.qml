@@ -4,7 +4,7 @@ import "../utils"
 MouseArea{
     id: root
 
-    width: 115
+    width: label.width + 10
     height: 25
     hoverEnabled: true
 

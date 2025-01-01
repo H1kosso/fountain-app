@@ -8,10 +8,12 @@ import "./qml/utils"
 
 
 ApplicationWindow {
+    id: appRoot
     width: 640
     height: 480
     visible: true
     title: qsTr("Fountain app")
+    property alias state: contentRoot.state
 
     property bool isBTconnected: true
 

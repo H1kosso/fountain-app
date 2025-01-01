@@ -9,7 +9,6 @@ Item {
     property int size: 0
     property var image: []
     property int _rowLength: 64
-    property bool ready: false
     property ListModel model: ListModel{}
 
     function arrayToListModel(array) {
@@ -24,18 +23,20 @@ Item {
     }
 
     function fillImage(rows) {
-        ready = false;
         image = [];
+        model.clear()
 
         for (var i = 0; i < rows; i++) {
             var row = [];
+            var rowModel = {};
             for (var j = 0; j < 64; j++) {
                 row.push(0);
+                rowModel["valueCol" + j] = 0;
             }
             image.push(row);
+            model.append(rowModel);
         }
         size = rows;
-        ready = true;
     }
 
     function setColorAt(row, column, value) {
@@ -44,20 +45,42 @@ Item {
             var rowIndex = Math.floor(index / 64);
             var colIndex = index % 64;
             image[rowIndex][colIndex] = value;
+
+            var rowModel = model.get(rowIndex);
+            rowModel["valueCol" + colIndex] = value;
+            model.set(rowIndex, rowModel);
         }
     }
 
-    function addRow(numRows) {
-        ready = false;
-        for (var i = 0; i < numRows; i++) {
-            var newRow = (new Array(64)).fill(0)
-            image.push(newRow);
+    function addRow(rows) {
+        for (var i = 0; i < rows; i++) {
+            var row = [];
+            var rowModel = {};
+            for (var j = 0; j < 64; j++) {
+                row.push(0);
+                rowModel["valueCol" + j] = 0;
+            }
+            image.push(row);
+            model.append(rowModel);
         }
-        size += numRows;
-        ready = true;
+        size += rows;
     }
 
-    Component.onCompleted: {
-        fillImage(32)
+    function imageToConfigImage() {
+        var configImage = [];
+
+        for (var i = 0; i < image.length; i++) {
+            var binaryString = "";
+
+            for (var j = 0; j < image[i].length; j++) {
+                binaryString += image[i][j].toString();
+            }
+
+            var decimalValue = parseInt(binaryString, 2);
+            configImage.push(decimalValue);
+        }
+
+        return configImage;
     }
+
 }

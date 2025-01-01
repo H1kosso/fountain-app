@@ -18,9 +18,17 @@ Rectangle{
             anchors.verticalCenter: parent.verticalCenter
         }
 
-        Button{
+        ToolbarButton{
             text: "Toggle BT connection"
             onClicked: isBTconnected = !isBTconnected
+            anchors.verticalCenter: parent.verticalCenter
+        }
+
+        ToolbarButton{
+            text: "Refresh pictures"
+            onClicked: gallery.getPictures()
+            visible: appRoot.state === "gallery"
+            anchors.verticalCenter: parent.verticalCenter
         }
     }
 }
