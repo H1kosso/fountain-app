@@ -93,7 +93,7 @@ ApplicationWindow {
             id: theme
         }
 
-        state: "gallery"
+        state: "settings"
         states: [
             State{
                 name: "home"

@@ -16,14 +16,15 @@ Drawer {
 
         Repeater{
             model: ListModel{
-                ListElement{ value: "home" }
-                ListElement{ value: "settings" }
-                ListElement{ value: "paintAnimation" }
-                ListElement{ value: "gallery"}
+                ListElement{ text: "Ekran Główny"; value: "home"; source: "../../assets/icons/home.png" }
+                ListElement{ text: "Ustawienia"; value: "settings"; source: "../../assets/icons/settings.png" }
+                ListElement{ text: "Własna animacja"; value: "paintAnimation"; source: "../../assets/icons/paint.png" }
+                ListElement{ text: "Galeria"; value: "gallery"; source: "../../assets/icons/gallery.png" }
             }
 
             delegate: MenuButton{
-                text: model.value
+                text: model.text
+                source: model.source
                 onClicked: {
                     contentRoot.state = model.value
                     menu.close()

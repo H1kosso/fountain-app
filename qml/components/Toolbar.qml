@@ -13,8 +13,8 @@ Rectangle{
         spacing: 10
 
         ToolbarButton{
-            text: "drawer open"
             onClicked: menu.open()
+            source: "../../assets/icons/menu.png"
             anchors.verticalCenter: parent.verticalCenter
         }
 

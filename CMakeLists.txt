@@ -14,6 +14,9 @@ set(QML_FILES
     qml/components/Gallery.qml
 
     qml/components/gallery/ImagePreview.qml
+    qml/components/gallery/RowDelegate.qml
+    qml/components/settings/EmailDelegate.qml
+    qml/components/settings/Divider.qml
 
     qml/utils/MyTheme.qml
     qml/utils/ApiManager.qml
@@ -34,6 +37,19 @@ qt_add_resources(fountain "fountain_assets"
     FILES
     assets/img/dog.jpg
 
+    assets/icons/bluetooth.png
+    assets/icons/clock.png
+    assets/icons/close.png
+    assets/icons/delete.png
+    assets/icons/email.png
+    assets/icons/fountain.png
+    assets/icons/gallery.png
+    assets/icons/home.png
+    assets/icons/menu.png
+    assets/icons/paint.png
+    assets/icons/save.png
+    assets/icons/settings.png
+
 )
 
 qt_add_qml_module(fountain
@@ -44,7 +60,6 @@ qt_add_qml_module(fountain
     QML_FILES ${QML_FILES}
     SOURCES
     singleimage.cpp singleimage.h
-    QML_FILES qml/components/gallery/RowDelegate.qml
 )
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 set_target_properties(fountain PROPERTIES

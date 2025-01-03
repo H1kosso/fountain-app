@@ -2,29 +2,50 @@ import QtQuick
 import QtQuick.Controls
 import "../utils"
 import "../controls"
+import "./settings"
 
-Rectangle{
+Item{
     id: root
     width: parent.width - 100
     anchors.horizontalCenter: parent.horizontalCenter
     height: column.height
-    color: "lightgreen"
-
-
 
     Column{
         id: column
         spacing: 10
-        Text{
-            text: "Settings"
+        width: parent.width
+
+        Item{
+            width: 1
+            height: 1
         }
-        Row{
+
+        Text{
+            text: "Ustawienia ekranu wodnego"
+            font.pixelSize: 25
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
+
+        Item{
+            width: 1
+            height: 2
+        }
+
+        Item{
+            width: 240
+            height: 25
+
             Text{
-                text: "Mode: "
+                text: "Tryb pracy: "
                 anchors.verticalCenter: parent.verticalCenter
             }
 
+
+
             ComboBox{
+                id: modeComboBox
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
                 textRole: "text"
                 valueRole: "value"
                 currentIndex: indexOfValue(config.mode)
@@ -33,23 +54,37 @@ Rectangle{
                 model: [
                     {value: 0, text: qsTr("Normal") },
                     {value: 1, text: qsTr("Demo") },
-                    {value: 2, text: qsTr("Servis") }
+                    {value: 2, text: qsTr("Service") }
                 ]
             }
         }
-        Row{
+
+        Divider{
+            text: "Czas pracy"
+        }
+
+        Item{
+            width: 240
+            height: 25
+
             Text{
-                text: "Enable weekends: "
+                text: "Aktywny w weekend:"
+                anchors.verticalCenter: parent.verticalCenter
             }
             CheckBox{
                 checked: config.enableWeekends
                 onClicked: config.enableWeekends = !config.enableWeekends
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
             }
         }
 
-        Row{
+        Item{
+            width: 240
+            height: 25
             Text{
-                text: "Work time"
+                text: "Czas prezentowania (min)"
+                anchors.verticalCenter: parent.verticalCenter
             }
             SpinBox{
                 stepSize: 1
@@ -58,12 +93,17 @@ Rectangle{
                 to: 60
                 from: 0
                 editable: true
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
             }
         }
 
-        Row{
+        Item{
+            width: 240
+            height: 25
             Text{
-                text: "Idle time"
+                text: "Czas nieaktywności (min)"
+                anchors.verticalCenter: parent.verticalCenter
             }
             SpinBox{
                 stepSize: 1
@@ -72,12 +112,17 @@ Rectangle{
                 to: 60
                 from: 0
                 editable: true
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
             }
         }
 
-        Row{
+        Item{
+            width: 240
+            height: 25
             Text{
-                text: "Work range from"
+                text: "Aktywna od godziny"
+                anchors.verticalCenter: parent.verticalCenter
             }
             SpinBox{
                 stepSize: 1
@@ -86,12 +131,17 @@ Rectangle{
                 to: 24
                 from: 0
                 editable: true
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
             }
         }
 
-        Row{
+        Item{
+            width: 240
+            height: 25
             Text{
-                text: "Work range to"
+                text: "Aktywna do godziny"
+                 anchors.verticalCenter: parent.verticalCenter
             }
             SpinBox{
                 stepSize: 1
@@ -100,9 +150,13 @@ Rectangle{
                 to: 24
                 from: 0
                 editable: true
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
             }
         }
-
+        Divider{
+            text: "Kolor oświetlenia"
+        }
         Row{
             id: colorsSelect
             spacing: 10
@@ -154,6 +208,57 @@ Rectangle{
             }
         }
 
+        Divider{
+            text: "Lista kontaktowa"
+        }
+
+        Column{
+            spacing: 5
+            Repeater{
+                id: emailRepeater
+                model: ListModel{}
+                delegate: EmailDelegate{
+                    text: model.value
+                    button.onClicked: emailRepeater.deleteEmail()
+                }
+
+                function deleteEmail(){
+                    for (var i = 0; i < emailRepeater.model.count; i++) {
+                        if(emailRepeater.model.get(i).value === config.mailList[i]){
+                            config.mailList.splice(i, 1)
+                            emailRepeater.model.remove(i)
+                        }
+                    }
+                }
+            }
+
+            Column{
+                spacing: 5
+
+                Text{
+                    text: "Emails:"
+                }
+                Row{
+
+
+                    TextInput{
+                        id: newEmail
+                        width: 200
+                        height: 20
+
+                    }
+
+                    Button{
+                        text: "Add"
+                        onClicked: {
+                            emailRepeater.model.append({"value": newEmail.text})
+                            config.mailList.push(newEmail.text)
+                        }
+                    }
+                }
+            }
+        }
+
         Row{
             Button{
                 text: "Post data"
@@ -169,6 +274,8 @@ Rectangle{
                 apiManager.getConfig(function() {
                     apiManager.getState(function(){
                         colorPicker.value = config.main
+                        config.mailList.forEach((element)=> emailRepeater.model.append({"value": element}))
+                        modeComboBox.currentIndex = modeComboBox.indexOfValue(config.mode)
                         console.log("All operations completed in sequence");
                     });
                 });

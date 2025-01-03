@@ -12,7 +12,7 @@ Rectangle {
         id: contentColumn
         y: 16
         spacing: 8
-        columns: 4
+        columns: 2
 
         Repeater{
             id: picturesRepeater
@@ -20,7 +20,7 @@ Rectangle {
 
             delegate: Item{
                 id: delegateImage
-                width: (root.width - 24)/4
+                width: (root.width - 24)/2
                 height: Math.min(width, column.height)
 
                 property var pictureData: []
