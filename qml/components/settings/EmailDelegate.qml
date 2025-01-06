@@ -1,7 +1,7 @@
 import QtQuick
 
 Item {
-    width: 200
+    width: 270
     height: 30
 
     // Alias dla tekstu i przycisku
@@ -14,15 +14,24 @@ Item {
     Text {
         id: label
         anchors.verticalCenter: parent.verticalCenter
-        x: 10
     }
 
     Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
-        width: 10
-        height: 10
-        color: "red"
+        width: 20
+        height: width
+        color: "transparent"
+        border.width: 1
+        border.color: "black"
+        radius: 4
+
+        Image{
+            width: 16
+            height: 16
+            anchors.centerIn: parent
+            source: "../../../assets/icons/delete.png"
+        }
 
         MouseArea {
             id: deleteButton

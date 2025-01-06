@@ -2,17 +2,19 @@ import QtQuick
 import "../utils"
 import ".//gallery"
 
-Rectangle {
+Item {
     id: root
     width: parent.width - 10
     anchors.horizontalCenter: parent.horizontalCenter
     height: contentColumn.height + contentColumn.y * 2
 
+    property int selectedIndex: -1
+
     Grid{
         id: contentColumn
         y: 16
         spacing: 8
-        columns: 2
+        columns: 1
 
         Repeater{
             id: picturesRepeater
@@ -20,7 +22,7 @@ Rectangle {
 
             delegate: Item{
                 id: delegateImage
-                width: (root.width - 24)/2
+                width: root.width
                 height: Math.min(width, column.height)
 
                 property var pictureData: []
@@ -44,7 +46,7 @@ Rectangle {
                             width: parent.width
 
                             Component.onCompleted: {
-                                for (var j = 0; j < imageInfo._rowLength ; j++) {
+                                for (var j = 0; j < 64 ; j++) {
                                     var propertyName = "valueCol" + j;
                                     valueModel.append({"value": model[propertyName]})
                                 }
@@ -52,16 +54,56 @@ Rectangle {
                         }
                     }
                 }
+                Rectangle{
+                    id: addButton
+                    color: "green"
+                    width: 22
+                    height: width
+
+                    anchors.right: deleteButton.left
+                    anchors.rightMargin: 5
+                    anchors.top: parent.top
+                    anchors.topMargin: 5
+
+                    border.width: 1
+                    border.color: "black"
+
+                    Image{
+                        anchors.centerIn: parent
+                        source:  selectedIndex === index ? "../../assets/icons/confirmation.png" : "../../assets/icons/add.png"
+                        width: 18
+                        height: width
+                    }
+
+                    MouseArea{
+                        anchors.fill: parent
+                        onClicked: {
+                            selectedIndex = index;
+                            config.pictureData = delegateImage.pictureData
+                        }
+                    }
+                }
 
                 Rectangle{
+                    id: deleteButton
                     color: "red"
-                    width: 10
+                    width: 22
                     height: width
 
                     anchors.right: parent.right
                     anchors.rightMargin: 5
                     anchors.top: parent.top
                     anchors.topMargin: 5
+
+                    border.width: 1
+                    border.color: "black"
+
+                    Image{
+                        anchors.centerIn: parent
+                        source: "../../assets/icons/delete.png"
+                        width: 18
+                        height: width
+                    }
 
                     MouseArea{
                         anchors.fill: parent
@@ -70,6 +112,14 @@ Rectangle {
                             getPictures();
                         }
                     }
+                }
+
+                Rectangle{
+                    color:"transparent"
+                    border.width: 1
+                    border.color: "black"
+                    visible: selectedIndex === index
+                    anchors.fill: parent
                 }
 
                 Component.onCompleted:{

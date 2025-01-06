@@ -3,12 +3,13 @@ import QtQuick.Controls
 import "../utils"
 import "../controls"
 import "./settings"
+import "./gallery"
 
 Item{
     id: root
     width: parent.width - 100
     anchors.horizontalCenter: parent.horizontalCenter
-    height: column.height
+    height: column.height + 10
 
     Column{
         id: column
@@ -141,7 +142,7 @@ Item{
             height: 25
             Text{
                 text: "Aktywna do godziny"
-                 anchors.verticalCenter: parent.verticalCenter
+                anchors.verticalCenter: parent.verticalCenter
             }
             SpinBox{
                 stepSize: 1
@@ -154,54 +155,70 @@ Item{
                 anchors.verticalCenter: parent.verticalCenter
             }
         }
+
         Divider{
             text: "Kolor oświetlenia"
         }
-        Row{
+
+        Column{
             id: colorsSelect
-            spacing: 10
+            spacing: 5
             property bool mainSelected: true
             onMainSelectedChanged: {
                 colorPicker.value = mainSelected ? config.main : config.secondary
             }
+            Item{
+                width: 240
+                height: 25
 
-            Rectangle{
-                width: 100
-                height: 20
-                radius: 5
-                color: config.main
-                border.color: "white"
-                border.width: colorsSelect.mainSelected ? 1 : 0
                 Text{
-                    anchors.centerIn: parent
-                    text: "Main color"
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: "Kolor główny"
                 }
-                MouseArea{
-                    anchors.fill: parent
-                    onClicked: colorsSelect.mainSelected = true
+
+                Rectangle{
+                    width: 100
+                    height: 20
+                    radius: 5
+                    color: config.main
+                    border.color: "white"
+                    border.width: colorsSelect.mainSelected ? 1 : 0
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
+
+                    MouseArea{
+                        anchors.fill: parent
+                        onClicked: colorsSelect.mainSelected = true
+                    }
                 }
             }
 
-            Rectangle{
-                width: 100
-                height: 20
-                radius: 5
-                color: config.secondary
-                border.color: "white"
-                border.width: colorsSelect.mainSelected ? 0 : 1
+            Item{
+                width: 240
+                height: 25
+
                 Text{
-                    anchors.centerIn: parent
-                    text: "Secondary color"
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: "Kolor alternatywny"
                 }
-                MouseArea{
-                    anchors.fill: parent
-                    onClicked: colorsSelect.mainSelected = false
+
+                Rectangle{
+                    width: 100
+                    height: 20
+                    radius: 5
+                    color: config.secondary
+                    border.color: "white"
+                    border.width: colorsSelect.mainSelected ? 0 : 1
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
+
+                    MouseArea{
+                        anchors.fill: parent
+                        onClicked: colorsSelect.mainSelected = false
+                    }
                 }
             }
 
-        }
-
-        Row{
             ColorPicker{
                 id: colorPicker
 
@@ -235,9 +252,6 @@ Item{
             Column{
                 spacing: 5
 
-                Text{
-                    text: "Emails:"
-                }
                 Row{
 
 
@@ -245,24 +259,34 @@ Item{
                         id: newEmail
                         width: 200
                         height: 20
-
                     }
 
-                    Button{
-                        text: "Add"
+                    ToolbarButton{
+                        text: "Dodaj"
+                        source: "../../assets/icons/add.png"
                         onClicked: {
                             emailRepeater.model.append({"value": newEmail.text})
                             config.mailList.push(newEmail.text)
+                            newEmail.clear()
                         }
                     }
                 }
             }
         }
 
+
         Row{
-            Button{
-                text: "Post data"
+            spacing: 10
+            ToolbarButton{
+                source: "../../../assets/icons/save.png"
+                text: "Potwierdź"
                 onClicked: apiManager.postConfig()
+            }
+
+            ToolbarButton{
+                source: "../../../assets/icons/close.png"
+                text: "Anuluj"
+                onClicked: console.log("TODO")
             }
         }
 
@@ -272,11 +296,13 @@ Item{
         apiManager.login(function() {
             apiManager.loginLocal(function(){
                 apiManager.getConfig(function() {
+                    // Przekształcamy dane na model
+                    colorPicker.value = config.main;
+                    config.mailList.forEach((element) => emailRepeater.model.append({"value": element}));
+                    modeComboBox.currentIndex = modeComboBox.indexOfValue(config.mode);
+
                     apiManager.getState(function(){
-                        colorPicker.value = config.main
-                        config.mailList.forEach((element)=> emailRepeater.model.append({"value": element}))
-                        modeComboBox.currentIndex = modeComboBox.indexOfValue(config.mode)
-                        console.log("All operations completed in sequence");
+                        ;
                     });
                 });
             });

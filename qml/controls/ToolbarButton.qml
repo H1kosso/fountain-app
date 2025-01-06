@@ -20,13 +20,15 @@ MouseArea{
         Row{
             id: row
             spacing: 5
-            anchors.centerIn: parent
+            anchors.verticalCenter: parent.verticalCenter
+            x: 5
 
             Image{
                 id: icon
                 width: rect.height - 10
                 height: width
                 anchors.verticalCenter: parent.verticalCenter
+                visible: source !== ""
             }
 
             Text{
@@ -35,6 +37,7 @@ MouseArea{
                 text: ""
                 font.pixelSize: 15
                 anchors.verticalCenter: parent.verticalCenter
+                visible: text !== ""
             }
         }
     }

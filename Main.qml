@@ -9,8 +9,8 @@ import "./qml/utils"
 
 ApplicationWindow {
     id: appRoot
-    width: 640
-    height: 480
+    width: 1080/3
+    height: 2340/3
     visible: true
     title: qsTr("Fountain app")
     property alias state: contentRoot.state
@@ -87,6 +87,10 @@ ApplicationWindow {
                 Gallery{
                     id: gallery
                 }
+
+                Bluetooth{
+                    id: bluetooth
+                }
             }
         }
         MyTheme{
@@ -101,6 +105,7 @@ ApplicationWindow {
                 PropertyChanges { target: settings; visible: false}
                 PropertyChanges { target: paintAnimation; visible: false}
                 PropertyChanges { target: gallery; visible: false}
+                PropertyChanges { target: bluetooth; visible: false}
             },
             State{
                 name: "settings"
@@ -108,6 +113,7 @@ ApplicationWindow {
                 PropertyChanges { target: settings; visible: true}
                 PropertyChanges { target: paintAnimation; visible: false}
                 PropertyChanges { target: gallery; visible: false}
+                PropertyChanges { target: bluetooth; visible: false}
             },
             State{
                 name: "paintAnimation"
@@ -115,13 +121,23 @@ ApplicationWindow {
                 PropertyChanges { target: settings; visible: false}
                 PropertyChanges { target: paintAnimation; visible: true}
                 PropertyChanges { target: gallery; visible: false}
+                PropertyChanges { target: bluetooth; visible: false}
             },
             State{
                 name: "gallery"
                 PropertyChanges { target: home; visible: false}
                 PropertyChanges { target: settings; visible: false}
                 PropertyChanges { target: paintAnimation; visible: false}
+                PropertyChanges { target: bluetooth; visible: false}
                 PropertyChanges { target: gallery; visible: true}
+            },
+            State{
+                name: "bluetooth"
+                PropertyChanges { target: home; visible: false}
+                PropertyChanges { target: settings; visible: false}
+                PropertyChanges { target: paintAnimation; visible: false}
+                PropertyChanges { target: gallery; visible: false}
+                PropertyChanges { target: bluetooth; visible: true}
             }
         ]
     }

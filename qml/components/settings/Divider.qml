@@ -17,7 +17,8 @@ Row{
     Text{
         id: label
         anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: -1
+        anchors.verticalCenterOffset: -3
+        font.pixelSize: 18
     }
 
     Rectangle{

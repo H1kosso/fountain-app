@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.27)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Gui Quick Sql)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Gui Quick Sql Bluetooth)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
@@ -12,6 +12,7 @@ set(QML_FILES
     qml/components/Settings.qml
     qml/components/Toolbar.qml
     qml/components/Gallery.qml
+    qml/components/Bluetooth.qml
 
     qml/components/gallery/ImagePreview.qml
     qml/components/gallery/RowDelegate.qml
@@ -31,6 +32,12 @@ qt_add_executable( fountain
     main.cpp
 )
 
+if(ANDROID)
+    set_property(TARGET fountain APPEND PROPERTY
+        QT_ANDROID_PACKAGE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/android
+    )
+endif()
+
 qt_add_resources(fountain "fountain_assets"
     PREFIX "/"
     BIG_RESOURCES
@@ -49,6 +56,12 @@ qt_add_resources(fountain "fountain_assets"
     assets/icons/paint.png
     assets/icons/save.png
     assets/icons/settings.png
+    assets/icons/add.png
+    assets/icons/paint-brush.png
+    assets/icons/eraser.png
+    assets/icons/refresh.png
+    assets/icons/confirmation.png
+    assets/icons/terminal.png
 
 )
 
@@ -60,9 +73,27 @@ qt_add_qml_module(fountain
     QML_FILES ${QML_FILES}
     SOURCES
     singleimage.cpp singleimage.h
+    bledevice.cpp bledevice.h
+    deviceinfo.cpp deviceinfo.h
+
 )
+
+
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 set_target_properties(fountain PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
-target_link_libraries(fountain PRIVATE Qt6::Gui Qt6::Quick)
+target_link_libraries(fountain PRIVATE Qt6::Gui Qt6::Quick Qt::Bluetooth)
+
+if (APPLE)
+    if (IOS)
+        set_target_properties(appHTS PROPERTIES
+            MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Info.cmake.ios.plist"
+        )
+else()
+    set_target_properties(appHTS PROPERTIES
+        MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Info.cmake.macos.plist"
+    )
+endif()
+endif()

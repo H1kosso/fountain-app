@@ -25,7 +25,8 @@ Rectangle{
         }
 
         ToolbarButton{
-            text: "Refresh pictures"
+            text: "Odśwież"
+            source: "../../assets/icons/refresh.png"
             onClicked: gallery.getPictures()
             visible: appRoot.state === "gallery"
             anchors.verticalCenter: parent.verticalCenter

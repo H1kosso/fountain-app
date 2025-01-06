@@ -20,9 +20,6 @@ Item{
                     model: 64
 
                     delegate: Rectangle {
-
-
-
                         id: pixel
                         width: root.width / 64
                         height: width

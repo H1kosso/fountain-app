@@ -69,10 +69,22 @@ Item {
             "enableWeekends": config.enableWeekends,
             "workTime": config.workTime,
             "idleTime": config.idleTime,
-            "mailList": ["Dello@ans.edu.pl", "pupa.ello@gmail.com.pl"],
+            "mailList": config.mailList,
             "picture": {
                 "size": config.pictureSize,
-                "data": [1, 2, 3]
+                "data": config.pictureData,
+                "colors": {
+                    "main":{
+                        "r": config.main.r * 255,
+                        "g": config.main.g * 255,
+                        "b": config.main.b * 255,
+                    },
+                    "secondary":{
+                        "r": config.secondary.r * 255,
+                        "g": config.secondary.g * 255,
+                        "b": config.secondary.b * 255,
+                    }
+                }
             },
             "workRange": {
                 "from": config.workRangeFrom,
@@ -80,6 +92,7 @@ Item {
             }
         };
         request.send(JSON.stringify(data));
+        console.log(JSON.stringify(data))
     }
 
     function login(callback) {
@@ -117,7 +130,7 @@ Item {
         request.onreadystatechange = function() {
             if (request.readyState === XMLHttpRequest.DONE) {
                 if (request.status && request.status === 200) {
-                    console.log("login response", request.responseText);
+                    console.log("login response LOCAL", request.responseText);
                     var result = JSON.parse(request.responseText)
 
                     loginLocalToken = result.token

@@ -63,6 +63,12 @@ Item{
 
         }
 
+        Image{
+            source: "https://hubertkajdan.com/wp-content/uploads/2019/06/2019-06-20-Jezioro-Lednickie-010-Pano-1024x663.jpg"
+            width: parent.width
+            height: 300
+        }
+
 
 
     }

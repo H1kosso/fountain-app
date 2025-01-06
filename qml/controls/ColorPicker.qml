@@ -12,9 +12,12 @@ Item {
 
         Column {
             anchors.verticalCenter: parent.verticalCenter
+            spacing: 5
             Row {
+                spacing: 5
                 Text {
                     text: "R: "
+
                 }
                 Slider {
                     from: 0
@@ -31,6 +34,7 @@ Item {
             }
 
             Row {
+                spacing: 5
                 Text {
                     text: "G: "
                 }
@@ -50,6 +54,7 @@ Item {
             }
 
             Row {
+                spacing: 5
                 Text {
                     text: "B: "
                 }
@@ -76,22 +81,15 @@ Item {
             Rectangle {
                 anchors.centerIn: parent
 
-                width: 100
+                width: 90
                 height: width
                 color: root.value
 
                 Text{
-                    anchors.centerIn: parent
-                    text: "Click to save"
-                }
-
-                Text {
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.bottom: parent.top
-                    anchors.bottomMargin: 2
-                    text: "RGB: " + (Math.round(root.value.r * 100) / 100).toFixed(2) + "," +
-                          (Math.round(root.value.g * 100) / 100).toFixed(2) + "," +
-                          (Math.round(root.value.b * 100) / 100).toFixed(2)
+                    anchors.bottomMargin: 5
+                    text: "Wciśnij aby zapisać"
                 }
 
                 MouseArea {

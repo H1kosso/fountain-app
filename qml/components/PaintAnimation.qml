@@ -2,8 +2,10 @@ import QtQuick
 import com.fountain
 import QtQuick.Controls
 import "../utils"
+import "../controls"
+import "./gallery"
 
-Rectangle {
+Item {
     id: root
     width: parent.width - 10
     anchors.horizontalCenter: parent.horizontalCenter
@@ -19,35 +21,45 @@ Rectangle {
         width: parent.width
         height: column.height + paintMenu.height + 50
 
-        Row {
+        Grid {
             id: paintMenu
             anchors.top: parent.top
+            anchors.topMargin: 10
+            anchors.horizontalCenter: parent.horizontalCenter
             spacing: 8
+
+            rows: 2
+            columns: 2
+
             property int brushMode: 1
 
-            Button {
-                text: "Paint"
+            ToolbarButton {
+                source: "../../assets/icons/paint-brush.png"
+                text: "Rysowanie"
                 onClicked: parent.brushMode = 1
             }
 
-            Button {
-                text: "Erase"
+            ToolbarButton {
+                source: "../../assets/icons/eraser.png"
+                text: "Usuwanie"
                 onClicked: parent.brushMode = 0
             }
-            Button {
-                text: "add row"
+            ToolbarButton {
+                source: "../../assets/icons/add.png"
+                text: "Dodaj wiersz"
                 onClicked: {
                     customImage.addRow(1)
                 }
             }
-            Button {
-                text: "save"
+            ToolbarButton {
+                source: "../../assets/icons/save.png"
+                text: "Zapisz"
                 onClicked: paintApiManager.loginLocal(function(){
                     paintApiManager.addPicture(customImage.size, customImage.image, config.main, config.secondary, function(){
                         gallery.refresh = true;
                     })
                 })
-               }
+            }
         }
 
         Column {
@@ -60,7 +72,6 @@ Rectangle {
             Repeater {
                 id: rowRepeater
                 model: customImage.model
-                property ListModel aliasModel: model
                 delegate: RowDelegate{
                     width: parent.width
 
