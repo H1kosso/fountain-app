@@ -36,6 +36,17 @@ if(ANDROID)
     set_property(TARGET fountain APPEND PROPERTY
         QT_ANDROID_PACKAGE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/android
     )
+
+    set_target_properties(fountain PROPERTIES QT_ANDROID_PACKAGE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/android)
+
+    list(APPEND android_extra_libs
+        ${CMAKE_CURRENT_SOURCE_DIR}/android/libs/arm64-v8a/libcrypto_1_1.so
+        ${CMAKE_CURRENT_SOURCE_DIR}/android/libs/arm64-v8a/libssl_1_1.so)
+
+
+    set_target_properties(fountain PROPERTIES
+        QT_ANDROID_EXTRA_LIBS "${android_extra_libs}")
+
 endif()
 
 qt_add_resources(fountain "fountain_assets"
@@ -43,6 +54,7 @@ qt_add_resources(fountain "fountain_assets"
     BIG_RESOURCES
     FILES
     assets/img/dog.jpg
+    assets/img/preview.jfif
 
     assets/icons/bluetooth.png
     assets/icons/clock.png
@@ -88,11 +100,11 @@ target_link_libraries(fountain PRIVATE Qt6::Gui Qt6::Quick Qt::Bluetooth)
 
 if (APPLE)
     if (IOS)
-        set_target_properties(appHTS PROPERTIES
+        set_target_properties(fountain PROPERTIES
             MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Info.cmake.ios.plist"
         )
 else()
-    set_target_properties(appHTS PROPERTIES
+    set_target_properties(fountain PROPERTIES
         MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Info.cmake.macos.plist"
     )
 endif()

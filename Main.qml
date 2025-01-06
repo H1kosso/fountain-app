@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Controls.Imagine
 import QtQuick.Controls
 import com.fountain
 
@@ -97,7 +98,7 @@ ApplicationWindow {
             id: theme
         }
 
-        state: "settings"
+        state: "home"
         states: [
             State{
                 name: "home"

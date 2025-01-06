@@ -27,6 +27,7 @@ Item {
                     onValueChanged: {
                         root.value = Qt.rgba(this.value, root.value.g, root.value.b, 1)
                     }
+                    width: 90
                 }
                 Text {
                     text: (Math.round(root.value.r * 100) / 100).toFixed(2)
@@ -47,6 +48,7 @@ Item {
                     onValueChanged: {
                         root.value = Qt.rgba(root.value.r, this.value, root.value.b, 1)
                     }
+                    width: 90
                 }
                 Text {
                     text: (Math.round(root.value.g * 100) / 100).toFixed(2)
@@ -67,6 +69,7 @@ Item {
                     onValueChanged: {
                         root.value = Qt.rgba(root.value.r, root.value.g, this.value, 1)
                     }
+                    width: 90
                 }
                 Text {
                     text: (Math.round(root.value.b * 100) / 100).toFixed(2)

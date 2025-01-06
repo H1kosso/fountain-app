@@ -33,7 +33,7 @@ Item{
         }
 
         Item{
-            width: 240
+            width: 250
             height: 25
 
             Text{
@@ -47,6 +47,8 @@ Item{
                 id: modeComboBox
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
+                height: 25
+                width: 100
                 textRole: "text"
                 valueRole: "value"
                 currentIndex: indexOfValue(config.mode)
@@ -65,7 +67,7 @@ Item{
         }
 
         Item{
-            width: 240
+            width: 250
             height: 25
 
             Text{
@@ -81,7 +83,7 @@ Item{
         }
 
         Item{
-            width: 240
+            width: 250
             height: 25
             Text{
                 text: "Czas prezentowania (min)"
@@ -96,11 +98,13 @@ Item{
                 editable: true
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
+                height: 28
+                width: 110
             }
         }
 
         Item{
-            width: 240
+            width: 250
             height: 25
             Text{
                 text: "Czas nieaktywności (min)"
@@ -115,11 +119,13 @@ Item{
                 editable: true
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
+                height: 28
+                width: 110
             }
         }
 
         Item{
-            width: 240
+            width: 250
             height: 25
             Text{
                 text: "Aktywna od godziny"
@@ -134,11 +140,13 @@ Item{
                 editable: true
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
+                height: 28
+                width: 110
             }
         }
 
         Item{
-            width: 240
+            width: 250
             height: 25
             Text{
                 text: "Aktywna do godziny"
@@ -153,6 +161,8 @@ Item{
                 editable: true
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
+                height: 28
+                width: 110
             }
         }
 
@@ -168,7 +178,7 @@ Item{
                 colorPicker.value = mainSelected ? config.main : config.secondary
             }
             Item{
-                width: 240
+                width: 250
                 height: 25
 
                 Text{
@@ -194,7 +204,7 @@ Item{
             }
 
             Item{
-                width: 240
+                width: 250
                 height: 25
 
                 Text{
@@ -253,13 +263,25 @@ Item{
                 spacing: 5
 
                 Row{
+                    spacing: 10
 
-
-                    TextInput{
-                        id: newEmail
-                        width: 200
+                    Rectangle{
+                        width: 190
                         height: 20
+                        radius: 4
+                        color: "gray"
+                        anchors.verticalCenter: parent.verticalCenter
+                        clip: true
+
+                        TextInput{
+                            id: newEmail
+                            anchors.fill: parent
+                            anchors.leftMargin: 3
+                            anchors.rightMargin: 3
+                        }
                     }
+
+
 
                     ToolbarButton{
                         text: "Dodaj"

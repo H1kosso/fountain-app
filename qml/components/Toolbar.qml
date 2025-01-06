@@ -19,12 +19,6 @@ Rectangle{
         }
 
         ToolbarButton{
-            text: "Toggle BT connection"
-            onClicked: isBTconnected = !isBTconnected
-            anchors.verticalCenter: parent.verticalCenter
-        }
-
-        ToolbarButton{
             text: "Odśwież"
             source: "../../assets/icons/refresh.png"
             onClicked: gallery.getPictures()

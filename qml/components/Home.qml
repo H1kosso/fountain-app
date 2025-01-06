@@ -17,15 +17,19 @@ Item{
             Text{
                 text: "Aplikacja do zarządzania kurtyną wodną"
                 anchors.horizontalCenter: parent.horizontalCenter
+                font.pixelSize: 19
+                font.weight: Font.DemiBold
             }
 
             Text{
                 text: "Wykonał Marcin Onik"
                 anchors.horizontalCenter: parent.horizontalCenter
+                font.pixelSize: 16
             }
             Text{
                 text: "kontakt: onikmarcin@wp.pl"
                 anchors.horizontalCenter: parent.horizontalCenter
+                font.pixelSize: 16
             }
         }
 
@@ -36,11 +40,14 @@ Item{
             Text{
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: "Fontanna działa obecnie w trybie:"
+                font.pixelSize: 15
             }
 
             Text{
                 text: ["Normal", "Demo", "Service"][fountainState.mode]
                 anchors.horizontalCenter: parent.horizontalCenter
+                font.pixelSize: 13
+                font.weight: Font.DemiBold
             }
 
             Rectangle{
@@ -54,19 +61,23 @@ Item{
             Text{
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: "Poziom wody w fontannie jest:"
+                font.pixelSize: 15
             }
 
             Text{
                 text: ["Optymalny", "Za niski"][fountainState.fluidLevel]
                 anchors.horizontalCenter: parent.horizontalCenter
+                font.pixelSize: 13
+                color: text === "Za niski" ? "red" : "black"
+                font.weight: Font.DemiBold
             }
 
         }
 
         Image{
-            source: "https://hubertkajdan.com/wp-content/uploads/2019/06/2019-06-20-Jezioro-Lednickie-010-Pano-1024x663.jpg"
+            source: "../../assets/img/preview.jfif"
             width: parent.width
-            height: 300
+            height: 200
         }
 
 
