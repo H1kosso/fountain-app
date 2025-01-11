@@ -27,12 +27,21 @@ Drawer {
             }
 
             delegate: MenuButton{
-                visible: value !== "bluetooth" || !disconnect
+                //visible: value !== "bluetooth" || !disconnect
                 text: model.text
                 source: model.source
                 onClicked: {
                     contentRoot.state = model.value
                     menu.close()
+
+                    switch(model.value){
+                    case "settings":
+                        settings.fetchConfig()
+                        break;
+                    case "gallery":
+                        gallery.fetchPictures()
+                        break;
+                    }
                 }
             }
         }
@@ -60,15 +69,16 @@ Drawer {
             running: false
         }
 
+
         ListView {
             id: bleDevicesView
             width: parent.width
             clip: true
-            model: bledevice.deviceListModel
+            //model: bledevice.deviceListModel
             delegate: RadioDelegate {
                 id: radioDelegate
                 text: (index+1)+". "+modelData
-                width: listView.width
+                width: bleDevicesView.width
                 onCheckedChanged: {
                     console.log("checked", modelData, index)
                     scanButton.enabled=false;

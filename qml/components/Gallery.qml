@@ -1,6 +1,6 @@
 import QtQuick
 import "../utils"
-import ".//gallery"
+import "./gallery"
 
 Item {
     id: root
@@ -23,7 +23,7 @@ Item {
             delegate: Item{
                 id: delegateImage
                 width: root.width
-                height: Math.min(width, column.height)
+                height: column.height
 
                 property var pictureData: []
                 property var binaryMatrix: []
@@ -31,7 +31,17 @@ Item {
                 ImageInfo{
                     id: imageInfo
                 }
-
+                Text{
+                    text: rowRepeater.model.count
+                    MouseArea{
+                        width: 10
+                        height: 10
+                        onClicked: {
+                            console.log(rowRepeater.model.count)
+                            console.log("clicked")
+                        }
+                    }
+                }
                 Column {
                     id: column
                     width: parent.width
@@ -41,11 +51,15 @@ Item {
                     Repeater {
                         id: rowRepeater
                         model: imageInfo.model
-                        property ListModel aliasModel: model
+
+
                         delegate: RowDelegate{
                             width: parent.width
 
                             Component.onCompleted: {
+                                mainColor = imageInfo.mainColor
+                                secondaryColor = imageInfo.secondaryColor
+
                                 for (var j = 0; j < 64 ; j++) {
                                     var propertyName = "valueCol" + j;
                                     valueModel.append({"value": model[propertyName]})
@@ -80,6 +94,12 @@ Item {
                         onClicked: {
                             selectedIndex = index;
                             config.pictureData = delegateImage.pictureData
+
+                            imageBLEConfig.pictureData.push(...delegateImage.pictureData)
+                            imageBLEConfig.size += delegateImage.pictureData.length
+                            imageBLEConfig.imageToBinary();
+                            imageBLEConfig.arrayToListModel(imageBLEConfig.binaryImage)
+                            console.log(imageBLEConfig.binaryImage)
                         }
                     }
                 }
@@ -108,8 +128,8 @@ Item {
                     MouseArea{
                         anchors.fill: parent
                         onClicked: {
-                            galleryApiManager.deletePicture(imageInfo._id);
-                            getPictures();
+                            apiManager.deletePicture(imageInfo._id);
+                            fetchPictures();
                         }
                     }
                 }
@@ -148,41 +168,35 @@ Item {
                                 var propertyName = "valueCol" + j;
                                 newRow.push(listModelRow[propertyName]);
                             }
-                            imageInfo.image.push(newRow)
+                            imageInfo.pictureData.push(newRow)
                         }
                     }
-
+                    imageInfo.mainColor = model.mainColor
+                    imageInfo.secondaryColor = model.secondaryColor
                     imageInfo.size = model.size
                     imageInfo._id = model._id
                     imageInfo.arrayToListModel(binaryMatrix)
-                }
 
+                }
             }
         }
     }
 
-    Component.onCompleted: {
-        getPictures()
-    }
-
-    function getPictures(){
-        galleryApiManager.loginLocal(function(){
-            galleryApiManager.getAllPictures(function(pictures){
-                picturesRepeater.model.clear();
-                for(var i = 0 ; i < pictures.length ; i++){
-                    var pictureData = JSON.stringify(pictures[i].data);
-
-                    picturesRepeater.model.append({
-                                                      "_id": pictures[i]._id,
-                                                      "size": pictures[i].size,
-                                                      "data": pictureData
-                                                  });
-                }
-            });
+    function fetchPictures(){
+        apiManager.getAllPictures(function(pictures){
+            picturesRepeater.model.clear();
+            for(var i = 0 ; i < pictures.length ; i++){
+                var pictureData = JSON.stringify(pictures[i].data);
+                var main = Qt.rgba(pictures[i].colors.main.r * 255, pictures[i].colors.main.g * 255, pictures[i].colors.main.b * 255, 1);
+                var secondary = Qt.rgba(pictures[i].colors.secondary.r * 255, pictures[i].colors.secondary.g * 255, pictures[i].colors.secondary.b * 255, 1);
+                picturesRepeater.model.append({
+                                                  "_id": pictures[i]._id,
+                                                  "size": pictures[i].size,
+                                                  "data": pictureData,
+                                                  "mainColor": main,
+                                                  "secondaryColor": secondary
+                                              });
+            }
         });
-    }
-
-    ApiManager{
-        id: galleryApiManager
     }
 }

@@ -13,6 +13,7 @@ set(QML_FILES
     qml/components/Toolbar.qml
     qml/components/Gallery.qml
     qml/components/Bluetooth.qml
+    qml/components/Login.qml
 
     qml/components/gallery/ImagePreview.qml
     qml/components/gallery/RowDelegate.qml
@@ -23,9 +24,11 @@ set(QML_FILES
     qml/utils/ApiManager.qml
     qml/utils/WebSocketManager.qml
     qml/utils/ImageInfo.qml
+
     qml/controls/MenuButton.qml
     qml/controls/ToolbarButton.qml
     qml/controls/ColorPicker.qml
+    qml/controls/CustomTextInput.qml
 )
 
 qt_add_executable( fountain
@@ -36,25 +39,18 @@ if(ANDROID)
     set_property(TARGET fountain APPEND PROPERTY
         QT_ANDROID_PACKAGE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/android
     )
-
-    set_target_properties(fountain PROPERTIES QT_ANDROID_PACKAGE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/android)
-
-    list(APPEND android_extra_libs
-        ${CMAKE_CURRENT_SOURCE_DIR}/android/libs/arm64-v8a/libcrypto_1_1.so
-        ${CMAKE_CURRENT_SOURCE_DIR}/android/libs/arm64-v8a/libssl_1_1.so)
-
-
-    set_target_properties(fountain PROPERTIES
-        QT_ANDROID_EXTRA_LIBS "${android_extra_libs}")
-
+    include(3rdparty/android-openssl/android_openssl.cmake)
+    add_android_openssl_libraries(fountain)
 endif()
+
+
 
 qt_add_resources(fountain "fountain_assets"
     PREFIX "/"
     BIG_RESOURCES
     FILES
-    assets/img/dog.jpg
     assets/img/preview.jfif
+    assets/img/ki.jpg
 
     assets/icons/bluetooth.png
     assets/icons/clock.png
@@ -74,6 +70,12 @@ qt_add_resources(fountain "fountain_assets"
     assets/icons/refresh.png
     assets/icons/confirmation.png
     assets/icons/terminal.png
+    assets/icons/paint-brush1.png
+    assets/icons/paint-brush2.png
+    assets/icons/paint-brush3.png
+    assets/icons/logout.png
+    assets/icons/no-pictures.png
+
 
 )
 
@@ -87,7 +89,6 @@ qt_add_qml_module(fountain
     singleimage.cpp singleimage.h
     bledevice.cpp bledevice.h
     deviceinfo.cpp deviceinfo.h
-
 )
 
 
@@ -108,4 +109,7 @@ else()
         MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Info.cmake.macos.plist"
     )
 endif()
+endif()
+if (ANDROID)
+    include(C:/Users/Marcin/AppData/Local/Android/Sdk/android_openssl/CMakeLists.txt)
 endif()

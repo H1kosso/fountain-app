@@ -44,6 +44,14 @@ ApplicationWindow {
         property color secondary : "red"
     }
 
+    ImageInfo {
+        id: imageBLEConfig
+    }
+
+    ApiManager{
+        id: apiManager
+    }
+
     Item{
         id: fountainState
         property int mode: 0
@@ -73,24 +81,34 @@ ApplicationWindow {
                 id: contentColumn
                 width: parent.width
 
+                Login{
+                    id: login
+                    visible: false
+                }
+
                 Home{
                     id: home
+                    visible: false
                 }
 
                 Settings{
                     id: settings
+                    visible: false
                 }
 
                 PaintAnimation{
                     id: paintAnimation
+                    visible: false
                 }
 
                 Gallery{
                     id: gallery
+                    visible: false
                 }
 
                 Bluetooth{
                     id: bluetooth
+                    visible: false
                 }
             }
         }
@@ -98,46 +116,34 @@ ApplicationWindow {
             id: theme
         }
 
-        state: "home"
+
+
+        state: "login"
         states: [
+            State{
+                name: "login"
+                PropertyChanges { target: login; visible: true}
+                PropertyChanges { target: toolbar; visible: false}
+                AnchorChanges{ target: contentRoot; anchors.top: parent.top}
+            },
             State{
                 name: "home"
                 PropertyChanges { target: home; visible: true}
-                PropertyChanges { target: settings; visible: false}
-                PropertyChanges { target: paintAnimation; visible: false}
-                PropertyChanges { target: gallery; visible: false}
-                PropertyChanges { target: bluetooth; visible: false}
             },
             State{
                 name: "settings"
-                PropertyChanges { target: home; visible: false}
                 PropertyChanges { target: settings; visible: true}
-                PropertyChanges { target: paintAnimation; visible: false}
-                PropertyChanges { target: gallery; visible: false}
-                PropertyChanges { target: bluetooth; visible: false}
             },
             State{
                 name: "paintAnimation"
-                PropertyChanges { target: home; visible: false}
-                PropertyChanges { target: settings; visible: false}
                 PropertyChanges { target: paintAnimation; visible: true}
-                PropertyChanges { target: gallery; visible: false}
-                PropertyChanges { target: bluetooth; visible: false}
             },
             State{
                 name: "gallery"
-                PropertyChanges { target: home; visible: false}
-                PropertyChanges { target: settings; visible: false}
-                PropertyChanges { target: paintAnimation; visible: false}
-                PropertyChanges { target: bluetooth; visible: false}
                 PropertyChanges { target: gallery; visible: true}
             },
             State{
                 name: "bluetooth"
-                PropertyChanges { target: home; visible: false}
-                PropertyChanges { target: settings; visible: false}
-                PropertyChanges { target: paintAnimation; visible: false}
-                PropertyChanges { target: gallery; visible: false}
                 PropertyChanges { target: bluetooth; visible: true}
             }
         ]

@@ -3,10 +3,7 @@ import com.fountain
 Item {
     id: root
 
-    // Dane logowania
     property string url: "http://at-waterscreen.ddnsking.com/api"
-    property string username: "At_2024"
-    property string password: "2bad_its!working."
 
     property string loginToken: ""
     property string loginLocalToken: ""
@@ -23,24 +20,24 @@ Item {
                     config.enableWeekends = result.enableWeekends
                     config.workTime = result.workTime
                     config.idleTime = result.idleTime
-                    config.pictureSize = result.picture.size
-                    config.pictureData = result.picture.data
+                    // config.pictureSize = result.picture.size
+                    // config.pictureData = result.picture.data
                     config.mailList = result.mailList
                     config.workRangeFrom = result.workRange.from
                     config.workRangeTo = result.workRange.to
-                    var mainColor = Qt.rgba(result.picture.colors.main.r / 255, result.picture.colors.main.g / 255, result.picture.colors.main.b / 255, 1);
-                    var secondaryColor = Qt.rgba(result.picture.colors.secondary.r / 255, result.picture.colors.secondary.g / 255, result.picture.colors.secondary.b / 255, 1);
 
-                    config.main = mainColor //TODO make in post multiply x255
-                    config.secondary = secondaryColor
+                    // var mainColor = Qt.rgba(result.picture.colors.main.r / 255, result.picture.colors.main.g / 255, result.picture.colors.main.b / 255, 1);
+                    // var secondaryColor = Qt.rgba(result.picture.colors.secondary.r / 255, result.picture.colors.secondary.g / 255, result.picture.colors.secondary.b / 255, 1);
+                    // config.main = mainColor
+                    // config.secondary = secondaryColor
+
                     if (callback) callback()
                 } else {
-                    console.log("HTTP get:", request.status, request.statusText)
+                    console.log("HTTP getConfig:", request.status, request.statusText)
                 }
             }
         }
         request.open("GET", url + "/dashboard/config", true)
-        //request.setRequestHeader("Authorization", "Basic " + Qt.btoa(username + ":" + password))
         request.setRequestHeader("Authorization", "Bearer " + loginToken);
         request.send()
     }
@@ -54,7 +51,7 @@ Item {
                     console.log("postConfig response", request.responseText);
                     if (callback) callback()
                 } else {
-                    console.log("HTTP post:", request.status, request.statusText);
+                    console.log("HTTP postConfig:", request.status, request.statusText);
                 }
             }
         };
@@ -70,22 +67,22 @@ Item {
             "workTime": config.workTime,
             "idleTime": config.idleTime,
             "mailList": config.mailList,
-            "picture": {
-                "size": config.pictureSize,
-                "data": config.pictureData,
-                "colors": {
-                    "main":{
-                        "r": config.main.r * 255,
-                        "g": config.main.g * 255,
-                        "b": config.main.b * 255,
-                    },
-                    "secondary":{
-                        "r": config.secondary.r * 255,
-                        "g": config.secondary.g * 255,
-                        "b": config.secondary.b * 255,
-                    }
-                }
-            },
+            // "picture": {
+            //     "size": config.pictureSize,
+            //     "data": config.pictureData,
+            //     "colors": {
+            //         "main":{
+            //             "r": config.main.r * 255,
+            //             "g": config.main.g * 255,
+            //             "b": config.main.b * 255,
+            //         },
+            //         "secondary":{
+            //             "r": config.secondary.r * 255,
+            //             "g": config.secondary.g * 255,
+            //             "b": config.secondary.b * 255,
+            //         }
+            //     }
+            // },
             "workRange": {
                 "from": config.workRangeFrom,
                 "to": config.workRangeTo
@@ -95,7 +92,7 @@ Item {
         console.log(JSON.stringify(data))
     }
 
-    function login(callback) {
+    function login(username, password, callback) {
         const request = new XMLHttpRequest();
 
         request.onreadystatechange = function() {
@@ -105,6 +102,7 @@ Item {
                     var result = JSON.parse(request.responseText)
 
                     loginToken = result.token
+                    appRoot.state = "home"
                     if (callback) callback()
                 } else {
                     console.log("HTTP login:", request.status, request.statusText);
@@ -116,9 +114,14 @@ Item {
 
         request.setRequestHeader("Content-Type", "application/json");
 
+        // const data = {
+        //     "username": "at_admin",
+        //     "password": "hF7Ya8yEPLXdzGMv4swC9Ue6fb3m5c"
+        // };
+
         const data = {
-            "username": "at_admin",
-            "password": "hF7Ya8yEPLXdzGMv4swC9Ue6fb3m5c"
+            "username": username,
+            "password": password
         };
 
         request.send(JSON.stringify(data));
@@ -136,7 +139,7 @@ Item {
                     loginLocalToken = result.token
                     if (callback) callback()
                 } else {
-                    console.log("HTTP login:", request.status, request.statusText);
+                    console.log("HTTP login LOCAL:", request.status, request.statusText);
                 }
             }
         };
@@ -166,12 +169,11 @@ Item {
                     fountainState.isPresenting = result.isPresenting
                     if (callback) callback()
                 } else {
-                    console.log("HTTP get:", request.status, request.statusText)
+                    console.log("HTTP getState:", request.status, request.statusText)
                 }
             }
         }
         request.open("GET", "http://localhost:3100/api/dashboard/state", true)
-        //request.setRequestHeader("Authorization", "Basic " + Qt.btoa(username + ":" + password))
         request.setRequestHeader("Authorization", "Bearer " + loginLocalToken);
         request.send()
     }
@@ -181,16 +183,15 @@ Item {
         request.onreadystatechange = function() {
             if (request.readyState === XMLHttpRequest.DONE) {
                 if (request.status && request.status === 200) {
-                    //console.log("getAllPictures response", request.responseText)
                     var result = JSON.parse(request.responseText)
+                    console.log("getAllPictures response", request.responseText)
                     if (callback) callback(result)
                 } else {
-                    console.log("HTTP get:", request.status, request.statusText)
+                    console.log("HTTP getAllPictures:", request.status, request.statusText)
                 }
             }
         }
         request.open("GET", "http://localhost:3100/api/dashboard/pictures", true)
-        //request.setRequestHeader("Authorization", "Basic " + Qt.btoa(username + ":" + password))
         request.setRequestHeader("Authorization", "Bearer " + loginLocalToken);
         request.send()
     }
@@ -203,12 +204,11 @@ Item {
                     var result = JSON.parse(request.responseText)
                     if (callback) callback(result)
                 } else {
-                    console.log("HTTP delete:", request.status, request.statusText)
+                    console.log("HTTP deletePicrure:", request.status, request.statusText)
                 }
             }
         }
         request.open("DELETE", "http://localhost:3100/api/dashboard/pictures/"+id, true)
-        //request.setRequestHeader("Authorization", "Basic " + Qt.btoa(username + ":" + password))
         request.setRequestHeader("Authorization", "Bearer " + loginLocalToken);
         request.send()
     }
@@ -234,10 +234,18 @@ Item {
 
         const payload = {
             size: size,
-            data: customImage.imageToConfigImage(),
-            colors: {
-                main: mainColor,
-                secondary: secondaryColor
+            data: image,
+            "colors": {
+                "main":{
+                    "r": mainColor.r / 255,
+                    "g": mainColor.g / 255,
+                    "b": mainColor.b / 255,
+                },
+                "secondary":{
+                    "r": secondaryColor.r / 255,
+                    "g": secondaryColor.g / 255,
+                    "b": secondaryColor.b / 255,
+                }
             }
         };
         request.send(JSON.stringify(payload));

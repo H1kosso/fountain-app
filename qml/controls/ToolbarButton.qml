@@ -10,6 +10,8 @@ MouseArea{
 
     property alias text: label.text
     property alias source: icon.source
+    property alias textColor: label.color
+    property alias pixelSize: label.font.pixelSize
 
     Rectangle{
         id: rect

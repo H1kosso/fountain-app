@@ -3,6 +3,8 @@ import QtQuick
 Row{
     id: root
     property ListModel valueModel: ListModel{}
+    property color mainColor: "black"
+    property color secondaryColor: "white"
 
     Repeater{
         id: repeater
@@ -10,7 +12,7 @@ Row{
         delegate: Rectangle{
             width: root.width/64
             height: width
-            color: model.value === 1 ? config.main : config.secondary
+            color: model.value === 1 ? mainColor : secondaryColor
         }
     }
 }

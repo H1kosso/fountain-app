@@ -10,10 +10,13 @@ Item{
     width: parent.width - 100
     anchors.horizontalCenter: parent.horizontalCenter
     height: column.height + 10
+    function dupa(){
+        console.log("dupa")
+    }
 
     Column{
         id: column
-        spacing: 10
+        spacing: 20
         width: parent.width
 
         Item{
@@ -48,7 +51,7 @@ Item{
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
                 height: 25
-                width: 100
+                width: 150
                 textRole: "text"
                 valueRole: "value"
                 currentIndex: indexOfValue(config.mode)
@@ -57,7 +60,8 @@ Item{
                 model: [
                     {value: 0, text: qsTr("Normal") },
                     {value: 1, text: qsTr("Demo") },
-                    {value: 2, text: qsTr("Service") }
+                    {value: 2, text: qsTr("Service") },
+                    {value: 3, text: qsTr("BLE RealTime") },
                 ]
             }
         }
@@ -167,75 +171,6 @@ Item{
         }
 
         Divider{
-            text: "Kolor oświetlenia"
-        }
-
-        Column{
-            id: colorsSelect
-            spacing: 5
-            property bool mainSelected: true
-            onMainSelectedChanged: {
-                colorPicker.value = mainSelected ? config.main : config.secondary
-            }
-            Item{
-                width: 250
-                height: 25
-
-                Text{
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: "Kolor główny"
-                }
-
-                Rectangle{
-                    width: 100
-                    height: 20
-                    radius: 5
-                    color: config.main
-                    border.color: "white"
-                    border.width: colorsSelect.mainSelected ? 1 : 0
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.right: parent.right
-
-                    MouseArea{
-                        anchors.fill: parent
-                        onClicked: colorsSelect.mainSelected = true
-                    }
-                }
-            }
-
-            Item{
-                width: 250
-                height: 25
-
-                Text{
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: "Kolor alternatywny"
-                }
-
-                Rectangle{
-                    width: 100
-                    height: 20
-                    radius: 5
-                    color: config.secondary
-                    border.color: "white"
-                    border.width: colorsSelect.mainSelected ? 0 : 1
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.right: parent.right
-
-                    MouseArea{
-                        anchors.fill: parent
-                        onClicked: colorsSelect.mainSelected = false
-                    }
-                }
-            }
-
-            ColorPicker{
-                id: colorPicker
-
-            }
-        }
-
-        Divider{
             text: "Lista kontaktowa"
         }
 
@@ -256,6 +191,7 @@ Item{
                             emailRepeater.model.remove(i)
                         }
                     }
+                    console.log(config.mailList)
                 }
             }
 
@@ -265,23 +201,13 @@ Item{
                 Row{
                     spacing: 10
 
-                    Rectangle{
-                        width: 190
-                        height: 20
-                        radius: 4
-                        color: "gray"
-                        anchors.verticalCenter: parent.verticalCenter
-                        clip: true
-
-                        TextInput{
+                        CustomTextInput{
                             id: newEmail
-                            anchors.fill: parent
+                            width: 190
+                            height: 20
                             anchors.leftMargin: 3
                             anchors.rightMargin: 3
                         }
-                    }
-
-
 
                     ToolbarButton{
                         text: "Dodaj"
@@ -289,7 +215,7 @@ Item{
                         onClicked: {
                             emailRepeater.model.append({"value": newEmail.text})
                             config.mailList.push(newEmail.text)
-                            newEmail.clear()
+                            newEmail.text = ""
                         }
                     }
                 }
@@ -308,30 +234,25 @@ Item{
             ToolbarButton{
                 source: "../../../assets/icons/close.png"
                 text: "Anuluj"
-                onClicked: console.log("TODO")
-            }
-        }
+                onClicked: apiManager.login(function() {
+                    apiManager.getConfig(function() {
+                        config.mailList.forEach((element) => emailRepeater.model.append({"value": element}));
+                        modeComboBox.currentIndex = modeComboBox.indexOfValue(config.mode)
 
-
-    }
-    Component.onCompleted: {
-        apiManager.login(function() {
-            apiManager.loginLocal(function(){
-                apiManager.getConfig(function() {
-                    // Przekształcamy dane na model
-                    colorPicker.value = config.main;
-                    config.mailList.forEach((element) => emailRepeater.model.append({"value": element}));
-                    modeComboBox.currentIndex = modeComboBox.indexOfValue(config.mode);
-
-                    apiManager.getState(function(){
-                        ;
                     });
                 });
-            });
-        });
+            }
+        }
     }
 
-    ApiManager{
-        id: apiManager
+    function fetchConfig(){
+
+        apiManager.getConfig(function() {
+            emailRepeater.model.clear();
+            config.mailList.forEach((element) => emailRepeater.model.append({"value": element}));
+            modeComboBox.currentIndex = modeComboBox.indexOfValue(config.mode);
+
+
+        });
     }
 }

@@ -3,15 +3,20 @@ import QtQuick
 Item {
     id: root
     property color mainColor: "black"
-    property color secondaryColor: "red"
+    property color secondaryColor: "white"
 
     property string _id
     property int size: 0
-    property var image: []
+    property var pictureData: []
+    property var binaryImage: []
     property int _rowLength: 64
     property ListModel model: ListModel{}
+    readonly property int maxLength: 256
 
-    function arrayToListModel(array) {
+    function arrayToListModel(array, clear=true) {
+        if(clear)
+            root.model.clear()
+
         for (var i = 0; i < array.length; i++) {
             // Każdy wiersz tablicy dodajemy jako obiekt w modelu
             var row = {};
@@ -22,8 +27,25 @@ Item {
         }
     }
 
+    function imageToBinary(){
+        binaryImage = pictureData.map(function(num) {
+
+            var binaryString = num.toString(2); // Zamiana liczby na binarną postać
+
+            while (binaryString.length < 64) {
+                binaryString = "0" + binaryString;
+            }
+
+            var binaryArray = binaryString.split('').map(function(digit) {
+                return parseInt(digit);
+            });
+
+            return binaryArray;
+        });
+    }
+
     function fillImage(rows) {
-        image = [];
+        pictureData = [];
         model.clear()
 
         for (var i = 0; i < rows; i++) {
@@ -33,7 +55,7 @@ Item {
                 row.push(0);
                 rowModel["valueCol" + j] = 0;
             }
-            image.push(row);
+            pictureData.push(row);
             model.append(rowModel);
         }
         size = rows;
@@ -41,10 +63,10 @@ Item {
 
     function setColorAt(row, column, value) {
         var index = row * 64 + column;
-        if (index < image.length * 64) {
+        if (index < pictureData.length * 64) {
             var rowIndex = Math.floor(index / 64);
             var colIndex = index % 64;
-            image[rowIndex][colIndex] = value;
+            pictureData[rowIndex][colIndex] = value;
 
             var rowModel = model.get(rowIndex);
             rowModel["valueCol" + colIndex] = value;
@@ -53,27 +75,30 @@ Item {
     }
 
     function addRow(rows) {
-        for (var i = 0; i < rows; i++) {
-            var row = [];
-            var rowModel = {};
-            for (var j = 0; j < 64; j++) {
-                row.push(0);
-                rowModel["valueCol" + j] = 0;
+        if(root.size + rows < maxLength){
+            for (var i = 0; i < rows; i++) {
+
+                var row = [];
+                var rowModel = {};
+                for (var j = 0; j < 64; j++) {
+                    row.push(0);
+                    rowModel["valueCol" + j] = 0;
+                }
+                pictureData.push(row);
+                model.append(rowModel);
             }
-            image.push(row);
-            model.append(rowModel);
+            size += rows;
         }
-        size += rows;
     }
 
     function imageToConfigImage() {
         var configImage = [];
 
-        for (var i = 0; i < image.length; i++) {
+        for (var i = 0; i < pictureData.length; i++) {
             var binaryString = "";
 
-            for (var j = 0; j < image[i].length; j++) {
-                binaryString += image[i][j].toString();
+            for (var j = 0; j < pictureData[i].length; j++) {
+                binaryString += pictureData[i][j].toString();
             }
 
             var decimalValue = parseInt(binaryString, 2);

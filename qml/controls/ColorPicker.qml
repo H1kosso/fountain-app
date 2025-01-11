@@ -6,6 +6,7 @@ Item {
     width: content.width
     height: content.height
     property color value
+    required property bool custom
 
     Row {
         id: content
@@ -65,7 +66,6 @@ Item {
                     to: 1
                     stepSize: 0.01
                     value: root.value.b
-                    // Update color value safely
                     onValueChanged: {
                         root.value = Qt.rgba(root.value.r, root.value.g, this.value, 1)
                     }
@@ -96,10 +96,13 @@ Item {
                 }
 
                 MouseArea {
-                    id: rect
                     anchors.fill: parent
-                    onClicked: colorsSelect.mainSelected ? config.main = root.value : config.secondary = root.value
-                }
+                    onClicked: {
+                        if(root.custom)
+                                   colorsSelect.mainSelected ? customImage.mainColor = root.value : customImage.secondaryColor = root.value
+                               else
+                                   colorsSelect.mainSelected ? imageBLEConfig.mainColor = root.value : imageBLEConfig.secondaryColor = root.value
+                }}
             }
         }
     }
