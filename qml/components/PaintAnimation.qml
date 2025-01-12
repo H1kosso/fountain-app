@@ -182,9 +182,11 @@ Item {
             pixelSize: 25
             source: "../../assets/icons/save.png"
             text: "Zapisz"
-            onClicked: apiManager.addPicture(customImage.size, customImage.imageToConfigImage(), customImage.mainColor, customImage.secondaryColor, function(){
-                gallery.refresh = true;
-            })
+            onClicked: {
+
+                apiManager.addPicture(customImage.size, customImage.imageToConfigImage(), customImage.mainColor, customImage.secondaryColor)
+                console.log(customImage.binaryImage)
+            }
         }
 
 

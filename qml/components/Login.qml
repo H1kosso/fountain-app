@@ -67,10 +67,11 @@ Item {
             onClicked: {
                 apiManager.login(username.text, password.text, function(){
                     apiManager.getState();
+                    apiManager.getConfig();
+
+                    apiManager.getAllPictures()
+
                 });
-                apiManager.loginLocal();
-
-
             }
         }
     }

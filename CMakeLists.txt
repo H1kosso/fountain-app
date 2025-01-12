@@ -14,6 +14,7 @@ set(QML_FILES
     qml/components/Gallery.qml
     qml/components/Bluetooth.qml
     qml/components/Login.qml
+    qml/components/DeviceMemoryImage.qml
 
     qml/components/gallery/ImagePreview.qml
     qml/components/gallery/RowDelegate.qml
@@ -22,7 +23,7 @@ set(QML_FILES
 
     qml/utils/MyTheme.qml
     qml/utils/ApiManager.qml
-    qml/utils/WebSocketManager.qml
+
     qml/utils/ImageInfo.qml
 
     qml/controls/MenuButton.qml
@@ -70,11 +71,14 @@ qt_add_resources(fountain "fountain_assets"
     assets/icons/refresh.png
     assets/icons/confirmation.png
     assets/icons/terminal.png
+    assets/icons/eye.png
+    assets/icons/undo.png
     assets/icons/paint-brush1.png
     assets/icons/paint-brush2.png
     assets/icons/paint-brush3.png
     assets/icons/logout.png
     assets/icons/no-pictures.png
+    assets/icons/play-button.png
 
 
 )

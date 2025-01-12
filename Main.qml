@@ -110,6 +110,11 @@ ApplicationWindow {
                     id: bluetooth
                     visible: false
                 }
+
+                DeviceMemoryImage{
+                    id: deviceMemoryImage
+                    visible: false
+                }
             }
         }
         MyTheme{
@@ -145,6 +150,10 @@ ApplicationWindow {
             State{
                 name: "bluetooth"
                 PropertyChanges { target: bluetooth; visible: true}
+            },
+            State{
+                name: "deviceMemoryImage"
+                PropertyChanges { target: deviceMemoryImage; visible: true}
             }
         ]
     }

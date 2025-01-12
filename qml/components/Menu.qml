@@ -4,7 +4,6 @@ import "../controls"
 
 Drawer {
     id: root
-    property bool disconnect: true
 
     background: Rectangle{
         anchors.fill: parent
@@ -27,7 +26,7 @@ Drawer {
             }
 
             delegate: MenuButton{
-                //visible: value !== "bluetooth" || !disconnect
+                visible: value !== "bluetooth" || appRoot.isBTconnected
                 text: model.text
                 source: model.source
                 onClicked: {
@@ -52,7 +51,7 @@ Drawer {
             source: "../../assets/icons/bluetooth.png"
             onClicked: {
                 bleDevicesView.enabled=false
-                if(disconnect) {
+                if(!appRoot.isBTconnected) {
                     text="Wyszukiwanie..."
                     enabled = false
                     busyIndicator.running=true
@@ -103,12 +102,12 @@ Drawer {
             console.log("ScanningFinished")
         }
         function onConnectionStart() {
-            disconnect = false
+            appRoot.isBTconnected = true
             busyIndicator.running = false
             console.log("ConnectionStart")
         }
         function onConnectionEnd() {
-            disconnect = true
+            appRoot.isBTconnected = false
             scanButton.text = "Rozłączono - wyszukaj ponownie"
             scanButton.enabled = true
             bledevice.resetDeviceListModel()

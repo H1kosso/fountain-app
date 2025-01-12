@@ -8,13 +8,44 @@ Item {
     anchors.horizontalCenter: parent.horizontalCenter
     height: contentColumn.height + contentColumn.y * 2
 
-    property int selectedIndex: -1
-
-    Grid{
+    Column{
         id: contentColumn
         y: 16
         spacing: 8
-        columns: 1
+
+        Text{
+            text: "Galeria"
+            anchors.horizontalCenter: parent.horizontalCenter
+            font.pixelSize: 19
+            font.weight: Font.DemiBold
+        }
+        Text{
+            visible: appRoot.isBTconnected
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: "Przycisk <b>+</b> dopisuje wybraną grafike do obrazka, który można nastepnie przesłać do pamięci urządzenia"
+            wrapMode: Text.Wrap
+            width: parent.width - 50
+            font.pixelSize: 15
+            horizontalAlignment: Text.AlignJustify
+        }
+
+        Text{
+            visible: appRoot.isBTconnected && config.mode === 3
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: "Przycisk <b>Play</b> pozwala wyświetlić wybrany obraz w czasie rzeczywistym"
+            wrapMode: Text.Wrap
+            width: parent.width - 50
+            font.pixelSize: 15
+            horizontalAlignment: Text.AlignJustify
+        }
+
+        Image{
+            source: "../../assets/icons/no-pictures.png"
+            anchors.horizontalCenter: parent.horizontalCenter
+            visible: picturesRepeater.model.count === 0
+            width: root.width
+            fillMode: Image.PreserveAspectFit
+        }
 
         Repeater{
             id: picturesRepeater
@@ -68,90 +99,112 @@ Item {
                         }
                     }
                 }
-                Rectangle{
-                    id: addButton
-                    color: "green"
-                    width: 22
-                    height: width
 
-                    anchors.right: deleteButton.left
-                    anchors.rightMargin: 5
+                Row{
+                    spacing: 5
                     anchors.top: parent.top
                     anchors.topMargin: 5
-
-                    border.width: 1
-                    border.color: "black"
-
-                    Image{
-                        anchors.centerIn: parent
-                        source:  selectedIndex === index ? "../../assets/icons/confirmation.png" : "../../assets/icons/add.png"
-                        width: 18
-                        height: width
-                    }
-
-                    MouseArea{
-                        anchors.fill: parent
-                        onClicked: {
-                            selectedIndex = index;
-                            config.pictureData = delegateImage.pictureData
-
-                            imageBLEConfig.pictureData.push(...delegateImage.pictureData)
-                            imageBLEConfig.size += delegateImage.pictureData.length
-                            imageBLEConfig.imageToBinary();
-                            imageBLEConfig.arrayToListModel(imageBLEConfig.binaryImage)
-                            console.log(imageBLEConfig.binaryImage)
-                        }
-                    }
-                }
-
-                Rectangle{
-                    id: deleteButton
-                    color: "red"
-                    width: 22
-                    height: width
-
                     anchors.right: parent.right
                     anchors.rightMargin: 5
-                    anchors.top: parent.top
-                    anchors.topMargin: 5
 
-                    border.width: 1
-                    border.color: "black"
 
-                    Image{
-                        anchors.centerIn: parent
-                        source: "../../assets/icons/delete.png"
-                        width: 18
+                    Rectangle{
+                        id: addButton
+                        visible: appRoot.isBTconnected
+                        color: "green"
+                        width: 22
                         height: width
+
+                        border.width: 1
+                        border.color: "black"
+
+                        Image{
+                            anchors.centerIn: parent
+                            source: "../../assets/icons/add.png"
+                            width: 18
+                            height: width
+                        }
+
+                        MouseArea{
+                            anchors.fill: parent
+                            onClicked: {
+                                config.pictureData = delegateImage.pictureData
+
+                                imageBLEConfig.pictureData.push(...delegateImage.pictureData)
+                                imageBLEConfig.size += delegateImage.pictureData.length
+                                imageBLEConfig.imageToBinary();
+                                imageBLEConfig.arrayToListModel(imageBLEConfig.binaryImage)
+                                console.log(imageBLEConfig.binaryImage)
+                            }
+                        }
                     }
 
-                    MouseArea{
-                        anchors.fill: parent
-                        onClicked: {
-                            apiManager.deletePicture(imageInfo._id);
-                            fetchPictures();
+                    Rectangle{
+                        id: playButton
+                        color: "blue"
+                        width: 22
+                        height: width
+
+                        border.width: 1
+                        border.color: "black"
+                        visible: appRoot.isBTconnected && config.mode === 3
+
+                        Image{
+                            anchors.centerIn: parent
+                            source: "../../assets/icons/play-button.png"
+                            width: 18
+                            height: width
+                        }
+
+                        MouseArea{
+                            anchors.fill: parent
+                            onClicked: {
+                                console.log("TODO play on device")
+                            }
+                        }
+                    }
+
+                    Rectangle{
+                        id: deleteButton
+                        color: "red"
+                        width: 22
+                        height: width
+                        border.width: 1
+                        border.color: "black"
+
+                        Image{
+                            anchors.centerIn: parent
+                            source: "../../assets/icons/delete.png"
+                            width: 18
+                            height: width
+                        }
+
+                        MouseArea{
+                            anchors.fill: parent
+                            onClicked: {
+                                apiManager.deletePicture(imageInfo._id);
+                                fetchPictures();
+                            }
                         }
                     }
                 }
 
-                Rectangle{
-                    color:"transparent"
-                    border.width: 1
-                    border.color: "black"
-                    visible: selectedIndex === index
-                    anchors.fill: parent
-                }
+
 
                 Component.onCompleted:{
                     pictureData = JSON.parse(model.data);
 
                     binaryMatrix = pictureData.map(function(num) {
 
-                        var binaryString = num.toString(2); // Zamiana liczby na binarną postać
 
+                        var binaryString = ""
+
+                        num = parseInt(num)
+                        binaryString = num.toString(2);
                         while (binaryString.length < 64) {
                             binaryString = "0" + binaryString;
                         }
+
 
                         var binaryArray = binaryString.split('').map(function(digit) {
                             return parseInt(digit);

@@ -181,17 +181,16 @@ Item{
                 model: ListModel{}
                 delegate: EmailDelegate{
                     text: model.value
-                    button.onClicked: emailRepeater.deleteEmail()
+                    button.onClicked: emailRepeater.deleteEmail(model.value)
                 }
 
-                function deleteEmail(){
+                function deleteEmail(email){
                     for (var i = 0; i < emailRepeater.model.count; i++) {
-                        if(emailRepeater.model.get(i).value === config.mailList[i]){
+                        if(email === config.mailList[i]){
                             config.mailList.splice(i, 1)
                             emailRepeater.model.remove(i)
                         }
                     }
-                    console.log(config.mailList)
                 }
             }
 
@@ -201,13 +200,13 @@ Item{
                 Row{
                     spacing: 10
 
-                        CustomTextInput{
-                            id: newEmail
-                            width: 190
-                            height: 20
-                            anchors.leftMargin: 3
-                            anchors.rightMargin: 3
-                        }
+                    CustomTextInput{
+                        id: newEmail
+                        width: 190
+                        height: 20
+                        anchors.leftMargin: 3
+                        anchors.rightMargin: 3
+                    }
 
                     ToolbarButton{
                         text: "Dodaj"
@@ -234,12 +233,12 @@ Item{
             ToolbarButton{
                 source: "../../../assets/icons/close.png"
                 text: "Anuluj"
-                onClicked: apiManager.login(function() {
-                    apiManager.getConfig(function() {
-                        config.mailList.forEach((element) => emailRepeater.model.append({"value": element}));
-                        modeComboBox.currentIndex = modeComboBox.indexOfValue(config.mode)
+                onClicked: apiManager.getConfig(function() {
+                    emailRepeater.model.clear()
+                    config.mailList.forEach((element) => emailRepeater.model.append({"value": element}));
+                    ;
+                    modeComboBox.currentIndex = modeComboBox.indexOfValue(config.mode)
 
-                    });
                 });
             }
         }

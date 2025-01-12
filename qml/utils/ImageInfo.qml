@@ -13,7 +13,15 @@ Item {
     property ListModel model: ListModel{}
     readonly property int maxLength: 256
 
+    function reset(){
+        size = 0;
+        pictureData = [];
+        binaryImage = [];
+        model.clear();
+    }
+
     function arrayToListModel(array, clear=true) {
+
         if(clear)
             root.model.clear()
 
@@ -40,8 +48,10 @@ Item {
                 return parseInt(digit);
             });
 
+
             return binaryArray;
         });
+
     }
 
     function fillImage(rows) {
@@ -103,9 +113,10 @@ Item {
 
             var decimalValue = parseInt(binaryString, 2);
             configImage.push(decimalValue);
-        }
 
+        }
         return configImage;
     }
+
 
 }

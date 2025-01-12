@@ -127,35 +127,6 @@ Item {
         request.send(JSON.stringify(data));
     }
 
-    function loginLocal(callback) {
-        const request = new XMLHttpRequest();
-
-        request.onreadystatechange = function() {
-            if (request.readyState === XMLHttpRequest.DONE) {
-                if (request.status && request.status === 200) {
-                    console.log("login response LOCAL", request.responseText);
-                    var result = JSON.parse(request.responseText)
-
-                    loginLocalToken = result.token
-                    if (callback) callback()
-                } else {
-                    console.log("HTTP login LOCAL:", request.status, request.statusText);
-                }
-            }
-        };
-
-        request.open("POST", "http://localhost:3100/api/dashboard/login", true);
-
-        request.setRequestHeader("Content-Type", "application/json");
-
-        const data = {
-            "username": "at_admin",
-            "password": "hF7Ya8yEPLXdzGMv4swC9Ue6fb3m5c"
-        };
-
-        request.send(JSON.stringify(data));
-    }
-
     function getState(callback){
         const request = new XMLHttpRequest()
         request.onreadystatechange = function() {
@@ -173,8 +144,8 @@ Item {
                 }
             }
         }
-        request.open("GET", "http://localhost:3100/api/dashboard/state", true)
-        request.setRequestHeader("Authorization", "Bearer " + loginLocalToken);
+        request.open("GET", url + "/dashboard/state", true)
+        request.setRequestHeader("Authorization", "Bearer " + loginToken);
         request.send()
     }
 
@@ -191,8 +162,11 @@ Item {
                 }
             }
         }
-        request.open("GET", "http://localhost:3100/api/dashboard/pictures", true)
-        request.setRequestHeader("Authorization", "Bearer " + loginLocalToken);
+        // request.open("GET", url + "/dashboard/pictures", true)
+        // request.setRequestHeader("Authorization", "Bearer " + loginToken);
+        request.open("GET", url + "/dashboard/pictures", true)
+        request.setRequestHeader("Authorization", "Bearer " + loginToken);
+
         request.send()
     }
 
@@ -208,8 +182,8 @@ Item {
                 }
             }
         }
-        request.open("DELETE", "http://localhost:3100/api/dashboard/pictures/"+id, true)
-        request.setRequestHeader("Authorization", "Bearer " + loginLocalToken);
+        request.open("DELETE", url + "/dashboard/pictures/"+id, true)
+        request.setRequestHeader("Authorization", "Bearer " + loginToken);
         request.send()
     }
 
@@ -220,17 +194,17 @@ Item {
             if (request.readyState === XMLHttpRequest.DONE) {
                 if (request.status && request.status === 200) {
                     var result = JSON.parse(request.responseText);
-                    if (callback) callback(result);
+                    if (callback) callback();
                 } else {
                     console.log("HTTP post picture:", request.status, request.statusText);
                 }
             }
         };
 
-        request.open("POST", "http://localhost:3100/api/dashboard/pictures", true);
+        request.open("POST", url + "/dashboard/pictures", true);
 
         request.setRequestHeader("Content-Type", "application/json");
-        request.setRequestHeader("Authorization", "Bearer " + loginLocalToken);
+        request.setRequestHeader("Authorization", "Bearer " + loginToken);
 
         const payload = {
             size: size,
