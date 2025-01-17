@@ -14,20 +14,6 @@
 
 #include "deviceinfo.h"
 
-#pragma pack (1)
-typedef struct{
-    const uint8_t flags;
-    const int32_t temperature;
-    const uint16_t year;
-    const uint8_t month;
-    const uint8_t day;
-    const uint8_t hour;
-    const uint8_t min;
-    const uint8_t sec;
-    const uint8_t place;
-}HTS_t;
-#pragma pack (0)
-
 class BLEDevice : public QObject
 {
     Q_OBJECT
@@ -44,12 +30,13 @@ private:
     QBluetoothDeviceDiscoveryAgent *DiscoveryAgent;
     QList<QObject*> qlDevices;
     QLowEnergyController *controller;
-    QLowEnergyService *service, *serviceBatt;
+    QLowEnergyService *service;
     QLowEnergyDescriptor notificationDesc;
-    bool bFoundHTService;
-    bool bFoundBattService;
     QStringList m_foundDevices;
     QStringList m_deviceListModel;
+    bool bFoundDevice;
+public slots:
+    void sendHexData(const QByteArray &data); // Nowa metoda do wysyłania danych
 
 private slots:
     /* Slots for QBluetothDeviceDiscoveryAgent */
@@ -66,7 +53,6 @@ private slots:
 
     /* Slotes for QLowEnergyService */
     void serviceStateChanged(QLowEnergyService::ServiceState);
-    void serviceBattStateChanged(QLowEnergyService::ServiceState);
     void updateData(const QLowEnergyCharacteristic &, const QByteArray &);
     void confirmedDescriptorWrite(const QLowEnergyDescriptor &, const QByteArray &);
 
@@ -81,13 +67,10 @@ public slots:
 
 signals:
     /* Signals for user */
-    void newTemperature(QList<QVariant>);
-    void newIntermediateTemperature(QList<QVariant>);
     void scanningFinished();
     void connectionStart();
     void connectionEnd();
     void deviceListModelChanged(QStringList);
-    void batteryLevel(quint8);
 
 };
 

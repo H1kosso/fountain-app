@@ -93,6 +93,7 @@ qt_add_qml_module(fountain
     singleimage.cpp singleimage.h
     bledevice.cpp bledevice.h
     deviceinfo.cpp deviceinfo.h
+
 )
 
 
@@ -114,6 +115,7 @@ else()
     )
 endif()
 endif()
+# TODO REPLACE PATH
 if (ANDROID)
     include(C:/Users/Marcin/AppData/Local/Android/Sdk/android_openssl/CMakeLists.txt)
 endif()

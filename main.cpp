@@ -12,6 +12,7 @@ int main(int argc, char *argv[])
 
     BLEDevice bledevice;
 
+
     app.setWindowIcon(QIcon(":/assets/icons/fountain.png"));
     engine.rootContext()->setContextProperty("bledevice", &bledevice);
     qDebug() << "My build Version String is - "

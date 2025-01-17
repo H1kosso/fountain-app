@@ -3,8 +3,7 @@
 BLEDevice::BLEDevice(QObject *parent) : QObject(parent),
     currentDevice(QBluetoothDeviceInfo()),
     controller(0),
-    service(0),
-    serviceBatt(0)
+    service(0)
 {
     DiscoveryAgent = new QBluetoothDeviceDiscoveryAgent(this);
     DiscoveryAgent->setLowEnergyDiscoveryTimeout(5000);
@@ -133,14 +132,12 @@ void BLEDevice::disconnectFromDevice()
 
 void BLEDevice::serviceDiscovered(const QBluetoothUuid &gatt)
 {
-    if(gatt==QBluetoothUuid(QBluetoothUuid::ServiceClassUuid::HealthThermometer)) {
-        bFoundHTService =true;
-        qDebug() << "HTS service found";
-    }
+    qDebug() << "GATT " << gatt;
+    bFoundDevice = true;
 
-    if(gatt==QBluetoothUuid(QBluetoothUuid::ServiceClassUuid::BatteryService)) {
-        bFoundBattService =true;
-        qDebug() << "BATT service found";
+    if(gatt==QBluetoothUuid(QBluetoothUuid::ServiceClassUuid::GenericAccess)) {
+        bFoundDevice =true;
+        qDebug() << "GENERIC ACCESS service found";
     }
 }
 
@@ -149,16 +146,13 @@ void BLEDevice::serviceScanDone()
     delete service;
     service=0;
 
-    delete serviceBatt;
-    serviceBatt=0;
-
-    if(bFoundHTService) {
-        qDebug() << "Connecting to HTS service...";
-        service = controller->createServiceObject(QBluetoothUuid(QBluetoothUuid::ServiceClassUuid::HealthThermometer),this);
+    if(bFoundDevice) {
+        qDebug() << "Connecting to Generic Access service...";
+        service = controller->createServiceObject(QBluetoothUuid(QBluetoothUuid::ServiceClassUuid::GenericAccess),this);
     }
 
     if(!service) {
-        qDebug() <<"HTS service not found";
+        qDebug() <<"Generic Access service not found";
         disconnectFromDevice();
         return;
     }
@@ -167,21 +161,6 @@ void BLEDevice::serviceScanDone()
     connect(service, &QLowEnergyService::characteristicChanged,this, &BLEDevice::updateData);
     connect(service, &QLowEnergyService::descriptorWritten,this, &BLEDevice::confirmedDescriptorWrite);
     service->discoverDetails();
-
-    if(bFoundBattService) {
-        qDebug() << "Connecting to Battery service...";
-        serviceBatt = controller->createServiceObject(QBluetoothUuid(QBluetoothUuid::ServiceClassUuid::BatteryService),this);
-    }
-
-    if(!serviceBatt) {
-        qDebug() <<"Batt service not found";
-        return;
-    }
-
-    connect(serviceBatt, &QLowEnergyService::stateChanged,this, &BLEDevice::serviceBattStateChanged);
-    connect(serviceBatt, &QLowEnergyService::characteristicChanged,this, &BLEDevice::updateData);
-    connect(serviceBatt, &QLowEnergyService::descriptorWritten,this, &BLEDevice::confirmedDescriptorWrite);
-    serviceBatt->discoverDetails();
 }
 
 void BLEDevice::deviceDisconnected()
@@ -203,70 +182,10 @@ void BLEDevice::controllerError(QLowEnergyController::Error error)
 
 void BLEDevice::serviceStateChanged(QLowEnergyService::ServiceState s)
 {
-    switch (s) {
-    case QLowEnergyService::RemoteServiceDiscovered:
-    {
+    qDebug() << "service : " << s;
+    emit connectionStart();
 
-        //TempMeas characteristic
-        const QLowEnergyCharacteristic  TempMeasChar = service->characteristic(QBluetoothUuid(QBluetoothUuid::CharacteristicType::TemperatureMeasurement));
-        if (!TempMeasChar.isValid()) {
-            qDebug() << "Temp Measurement characteristic not found";
-            break;
-        }
-        // TempMeas indicate enabled
-        const QLowEnergyDescriptor m_notificationDescTM = TempMeasChar.descriptor(QBluetoothUuid::DescriptorType::ClientCharacteristicConfiguration);
-        if (m_notificationDescTM.isValid()) {
-            // Enable indication
-            service->writeDescriptor(m_notificationDescTM, QByteArray::fromHex("0200")); // enable indication
-            qDebug() << "TM indication enabled";
-            //emit connectionStart();
-        }
 
-        //TempMeas characteristic
-        const QLowEnergyCharacteristic  IntermediateTempChar = service->characteristic(QBluetoothUuid(QBluetoothUuid::CharacteristicType::IntermediateTemperature));
-        if (!IntermediateTempChar.isValid()) {
-            qDebug() << "Intermediate Temp characteristic not found";
-            break;
-        }
-        // TempMeas notificate enabled
-        const QLowEnergyDescriptor m_notificationDescIT = IntermediateTempChar.descriptor(QBluetoothUuid::DescriptorType::ClientCharacteristicConfiguration);
-        if (m_notificationDescIT.isValid()) {
-            // Enable notification
-            service->writeDescriptor(m_notificationDescIT, QByteArray::fromHex("0100")); // enable notification
-            qDebug() << "IT notification enabled";
-            emit connectionStart();
-        }
-        break;
-    }
-    default:
-
-        break;
-    }
-}
-
-void BLEDevice::serviceBattStateChanged(QLowEnergyService::ServiceState s)
-{
-    switch (s) {
-    case QLowEnergyService::RemoteServiceDiscovered:
-    {
-        const QLowEnergyCharacteristic  BattChar = serviceBatt->characteristic(QBluetoothUuid(QBluetoothUuid::CharacteristicType::BatteryLevel));
-        if (!BattChar.isValid()) {
-            qDebug() << "Batt characteristic not found";
-            break;
-        }
-
-        // Enable notification
-        const QLowEnergyDescriptor m_notificationDesc = BattChar.descriptor(QBluetoothUuid::DescriptorType::ClientCharacteristicConfiguration);
-        if (m_notificationDesc.isValid()) {
-            serviceBatt->writeDescriptor(m_notificationDesc, QByteArray::fromHex("0100")); // enable notification
-        }
-
-        break;
-    }
-    default:
-
-        break;
-    }
 }
 
 void BLEDevice::confirmedDescriptorWrite(const QLowEnergyDescriptor &d, const QByteArray &value)
@@ -286,68 +205,24 @@ void BLEDevice::writeData(QByteArray v)
 
 void BLEDevice::updateData(const QLowEnergyCharacteristic &c, const QByteArray &v)
 {
-    if (c.uuid() == QBluetoothUuid(QBluetoothUuid::CharacteristicType::TemperatureMeasurement)) {
 
-        const HTS_t *hts = reinterpret_cast<const HTS_t*>(v.constData());
-        // flags (0) - 0-C/1-F
-        // flags (1) - TimeStamp present
-        // flags (2) - TempType present
-        // flags (7) - over 38 C
 
-        // Encode ieee11073_32BitFloat_t
-        int exponent = hts->temperature >> 24;
-        int mantissa = hts->temperature & 0x00FFFFFF;
-        qreal tempValue = (qreal)mantissa * pow(10, exponent);
-        int place = hts->place;
 
-        QString dateTime = QString().asprintf("%04d-%02d-%02d  %02d:%02d:%02d", hts->year, hts->month, hts->day, hts->hour, hts->min, hts->sec);
-        QList<QVariant> data;
-        data.clear();
-        data.append(tempValue);
-        data.append(dateTime);
-        data.append(place);
 
-        emit newTemperature(data);
+}void BLEDevice::sendHexData(const QByteArray &data)
+{
 
-        qDebug()<<"Temp meas";
+        qDebug() << "XXXB";
+        // Konwertujemy ciąg hex na QByteArray
+        QByteArray byteArray = QByteArray::fromHex(data);
 
-    }
 
-    if (c.uuid() == QBluetoothUuid(QBluetoothUuid::CharacteristicType::IntermediateTemperature)) {
+            // Wybieramy odpowiednią charakterystykę, którą będziemy pisać
+            const QLowEnergyCharacteristic charToWrite = service->characteristic(QBluetoothUuid(QBluetoothUuid::CharacteristicType::TemperatureMeasurement)); // Zmień UUID na odpowiednią charakterystykę
+            // Wysyłamy dane do urządzenia
+            service->writeCharacteristic(charToWrite, byteArray, QLowEnergyService::WriteWithoutResponse);
+            qDebug() << "XXX Sent data:" << byteArray.toHex();
 
-        const HTS_t *hts = reinterpret_cast<const HTS_t*>(v.constData());
-        // flags (0) - 0-C/1-F
-        // flags (1) - TimeStamp present
-        // flags (2) - TempType present
-        // flags (7) - over 38 C
-
-        // Encode ieee11073_32BitFloat_t
-        int exponent = hts->temperature >> 24;
-        int mantissa = hts->temperature & 0x00FFFFFF;
-        qreal tempValue = (qreal)mantissa * pow(10, exponent);
-
-        QString dateTime = QString().asprintf("%04d-%02d-%02d  %02d:%02d:%02d", hts->year, hts->month, hts->day, hts->hour, hts->min, hts->sec);
-        QList<QVariant> data;
-        data.clear();
-        data.append(tempValue);
-        data.append(dateTime);
-
-        emit newIntermediateTemperature(data);
-
-        qDebug()<<"Intermediate";
-
-    }
-
-    if (c.uuid() == QBluetoothUuid(QBluetoothUuid::CharacteristicType::BatteryLevel)) {
-
-        quint8 batt=0;
-        bool ok;
-        batt = v.toHex().toInt(&ok, 16);
-
-        if(batt>100)
-            batt=100;
-
-        emit batteryLevel(batt);
-    }
 }
+
 

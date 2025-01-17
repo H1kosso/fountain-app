@@ -45,10 +45,10 @@ Drawer {
             }
         }
 
-        MenuButton{
+        Button{
             id: scanButton
             text: "Wyszukaj urządzenie"
-            source: "../../assets/icons/bluetooth.png"
+            // source: "../../assets/icons/bluetooth.png"
             onClicked: {
                 bleDevicesView.enabled=false
                 if(!appRoot.isBTconnected) {
@@ -68,22 +68,22 @@ Drawer {
             running: false
         }
 
-
-        ListView {
+        Column {
             id: bleDevicesView
             width: parent.width
-            clip: true
-            //model: bledevice.deviceListModel
-            delegate: RadioDelegate {
-                id: radioDelegate
-                text: (index+1)+". "+modelData
-                width: bleDevicesView.width
-                onCheckedChanged: {
-                    console.log("checked", modelData, index)
-                    scanButton.enabled=false;
-                    scanButton.text="Łączenie z "+modelData
-                    bleDevicesView.enabled = false;
-                    bledevice.startConnect(index)
+            Repeater{
+                model: bledevice.deviceListModel
+                delegate: Text{
+                    text: modelData
+                    font.pixelSize: 25
+                    MouseArea{
+                        onClicked: {
+                            scanButton.enabled=false;
+                            scanButton.text="Connecting to "+modelData
+                            bledevice.startConnect(index)
+                        }
+                        anchors.fill: parent
+                    }
                 }
             }
         }
@@ -105,6 +105,7 @@ Drawer {
             appRoot.isBTconnected = true
             busyIndicator.running = false
             console.log("ConnectionStart")
+            scanButton.text = "connected"
         }
         function onConnectionEnd() {
             appRoot.isBTconnected = false

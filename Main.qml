@@ -16,7 +16,7 @@ ApplicationWindow {
     title: qsTr("Fountain app")
     property alias state: contentRoot.state
 
-    property bool isBTconnected: true
+    property bool isBTconnected: false
 
     header: Toolbar{
         id: toolbar
