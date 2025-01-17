@@ -15,6 +15,7 @@ set(QML_FILES
     qml/components/Bluetooth.qml
     qml/components/Login.qml
     qml/components/DeviceMemoryImage.qml
+    qml/components/Logs.qml
 
 
     qml/components/gallery/RowDelegate.qml
@@ -79,6 +80,10 @@ qt_add_resources(fountain "fountain_assets"
     assets/icons/logout.png
     assets/icons/no-pictures.png
     assets/icons/play-button.png
+    assets/icons/log.png
+    assets/icons/on.png
+    assets/icons/off.png
+    assets/icons/bt-upload.png
 
 
 )

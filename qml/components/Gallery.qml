@@ -72,7 +72,6 @@ Item {
                         id: rowRepeater
                         model: imageInfo.model
 
-
                         delegate: RowDelegate{
                             width: parent.width
 
@@ -118,25 +117,23 @@ Item {
                             anchors.fill: parent
                             onClicked: {
                                 config.pictureData = delegateImage.pictureData
-
                                 imageBLEConfig.pictureData.push(...delegateImage.pictureData)
                                 imageBLEConfig.size += delegateImage.pictureData.length
                                 imageBLEConfig.imageToBinary();
                                 imageBLEConfig.arrayToListModel(imageBLEConfig.binaryImage)
-                                console.log(imageBLEConfig.binaryImage)
                             }
                         }
                     }
 
                     Rectangle{
                         id: playButton
-                        color: "blue"
+                        color: "lightblue"
                         width: 22
                         height: width
 
                         border.width: 1
                         border.color: "black"
-                        visible: appRoot.isBTconnected && config.mode === 3
+                        visible: appRoot.isBTconnected
 
                         Image{
                             anchors.centerIn: parent
@@ -178,22 +175,16 @@ Item {
                     }
                 }
 
-
-
                 Component.onCompleted:{
                     pictureData = JSON.parse(model.data);
-
                     binaryMatrix = pictureData.map(function(num) {
 
-
                         var binaryString = ""
-
                         num = parseInt(num)
                         binaryString = num.toString(2);
-                        while (binaryString.length < 64) {
-                            binaryString = "0" + binaryString;
-                        }
 
+                        while (binaryString.length < 64)
+                            binaryString = "0" + binaryString;
 
                         var binaryArray = binaryString.split('').map(function(digit) {
                             return parseInt(digit);
@@ -213,12 +204,12 @@ Item {
                             imageInfo.pictureData.push(newRow)
                         }
                     }
+
                     imageInfo.mainColor = model.mainColor
                     imageInfo.secondaryColor = model.secondaryColor
                     imageInfo.size = model.size
                     imageInfo._id = model._id
                     imageInfo.arrayToListModel(binaryMatrix)
-
                 }
             }
         }

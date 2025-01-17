@@ -16,7 +16,7 @@ ApplicationWindow {
     title: qsTr("Fountain app")
     property alias state: contentRoot.state
 
-    property bool isBTconnected: false
+    property bool isBTconnected: true
 
     header: Toolbar{
         id: toolbar
@@ -74,8 +74,16 @@ ApplicationWindow {
             id: contentFlickable
             anchors.fill: parent
             flickableDirection: Flickable.VerticalFlick
-            boundsBehavior: Flickable.StopAtBounds
+            boundsBehavior: appRoot.state === "gallery" ? Flickable.DragAndOvershootBounds : Flickable.StopAtBounds
             contentHeight: contentColumn.height
+
+            onFlickStarted: {
+                if (verticalOvershoot <= 50)
+                {
+                    apiManager.getAllPictures()
+                }
+
+            }
 
             Column{
                 id: contentColumn
@@ -115,6 +123,11 @@ ApplicationWindow {
                     id: deviceMemoryImage
                     visible: false
                 }
+
+                Logs{
+                    id: logs
+                    visible: false
+                }
             }
         }
         MyTheme{
@@ -152,6 +165,10 @@ ApplicationWindow {
             State{
                 name: "deviceMemoryImage"
                 PropertyChanges { target: deviceMemoryImage; visible: true}
+            },
+            State{
+                name: "logs"
+                PropertyChanges { target: logs; visible: true}
             }
         ]
     }

@@ -3,6 +3,7 @@ import QtQuick.Controls
 import "../utils"
 import "./gallery"
 import "../controls"
+import "./settings"
 
 Item{
     id: root
@@ -10,26 +11,86 @@ Item{
     anchors.horizontalCenter: parent.horizontalCenter
     height: column.height
 
-
-
-
     Column {
         id: column
         width: parent.width
         anchors.top: parent.top
         anchors.topMargin: 10
         anchors.horizontalCenter: parent.horizontalCenter
+        spacing: 10
 
         ToolbarButton {
             anchors.horizontalCenter: parent.horizontalCenter
-            width: 130
+            width: 200
             height: 30
             pixelSize: 20
             source: "../../assets/icons/eye.png"
-            text: "Podgląd"
+            text: "Podgląd obrazu"
             onClicked: {
                 appRoot.state = "deviceMemoryImage"
             }
+        }
+
+        ToolbarButton {
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: 200
+            height: 30
+            pixelSize: 20
+            source: "../../assets/icons/log.png"
+            text: "Logi systemowe"
+            onClicked: {
+                appRoot.state = "logs"
+            }
+        }
+    }
+
+    Column{
+        width: parent.width
+        anchors.top: column.bottom
+        anchors.topMargin: 50
+
+        spacing: 10
+
+        Text{
+            font.pixelSize: 18
+            text: "Sieć wifi"
+            font.weight: Font.DemiBold
+            color: "#3A3C3C"
+        }
+
+        Column{
+            width: parent.width
+            spacing: 5
+
+            Text{
+                text: "Nazwa"
+                color: "#3A3C3C"
+            }
+            CustomTextInput{
+                width: parent.width
+            }
+        }
+
+        Column{
+            width: parent.width
+            spacing: 5
+
+            Text{
+                text: "Hasło"
+                color: "#3A3C3C"
+            }
+            CustomTextInput{
+                width: parent.width
+            }
+        }
+
+        ToolbarButton {
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: 100
+            height: 30
+            pixelSize: 20
+            source: "../../assets/icons/save.png"
+            text: "Zapisz"
         }
     }
 }

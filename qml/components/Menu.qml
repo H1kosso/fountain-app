@@ -45,10 +45,10 @@ Drawer {
             }
         }
 
-        Button{
+        MenuButton{
             id: scanButton
             text: "Wyszukaj urządzenie"
-            // source: "../../assets/icons/bluetooth.png"
+            source: "../../assets/icons/bluetooth.png"
             onClicked: {
                 bleDevicesView.enabled=false
                 if(!appRoot.isBTconnected) {

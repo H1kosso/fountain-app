@@ -26,19 +26,18 @@ Item {
             root.model.clear()
 
         for (var i = 0; i < array.length; i++) {
-            // Każdy wiersz tablicy dodajemy jako obiekt w modelu
             var row = {};
             for (var j = 0; j < array[i].length; j++) {
-                row["valueCol" + j] = array[i][j]; // Dodajemy wartości do obiektu
+                row["valueCol" + j] = array[i][j];
             }
-            root.model.append(row); // Dodajemy obiekt (wiersz) do modelu
+            root.model.append(row);
         }
     }
 
     function imageToBinary(){
         binaryImage = pictureData.map(function(num) {
 
-            var binaryString = num.toString(2); // Zamiana liczby na binarną postać
+            var binaryString = num.toString(2);
 
             while (binaryString.length < 64) {
                 binaryString = "0" + binaryString;
@@ -47,7 +46,6 @@ Item {
             var binaryArray = binaryString.split('').map(function(digit) {
                 return parseInt(digit);
             });
-
 
             return binaryArray;
         });
@@ -117,6 +115,4 @@ Item {
         }
         return configImage;
     }
-
-
 }

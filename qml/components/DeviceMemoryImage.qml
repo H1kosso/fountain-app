@@ -44,6 +44,15 @@ Item{
                     imageBLEConfig.reset();
                 }
             }
+
+            ToolbarButton {
+                anchors.horizontalCenter: parent.horizontalCenter
+                width: 130
+                height: 30
+                pixelSize: 20
+                source: "../../assets/icons/bt-upload.png"
+                text: "Zapisz"
+            }
         }
         Column{
             id: colorsSelect

@@ -4,12 +4,9 @@ Item {
     width: 270
     height: 30
 
-    // Alias dla tekstu i przycisku
     property alias text: label.text
     property alias button: deleteButton
     property var deleteFunction
-
-
 
     Text {
         id: label
