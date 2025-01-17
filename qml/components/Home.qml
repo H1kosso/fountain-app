@@ -11,6 +11,7 @@ Item{
         spacing: 20
         width: parent.width
         topPadding: 30
+
         Column{
             spacing: 3
             anchors.horizontalCenter: parent.horizontalCenter
@@ -26,6 +27,7 @@ Item{
                 anchors.horizontalCenter: parent.horizontalCenter
                 font.pixelSize: 16
             }
+
             Text{
                 text: "kontakt: onikmarcin@wp.pl"
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -71,7 +73,6 @@ Item{
                 color: text === "Za niski" ? "red" : "black"
                 font.weight: Font.DemiBold
             }
-
         }
 
         Image{
@@ -79,8 +80,5 @@ Item{
             width: parent.width
             height: 200
         }
-
-
-
     }
 }

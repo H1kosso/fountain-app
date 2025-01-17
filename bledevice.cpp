@@ -149,6 +149,7 @@ void BLEDevice::serviceScanDone()
     if(bFoundDevice) {
         qDebug() << "Connecting to Generic Access service...";
         service = controller->createServiceObject(QBluetoothUuid(QBluetoothUuid::ServiceClassUuid::GenericAccess),this);
+        qDebug() << "Connected to Generic Access service";
     }
 
     if(!service) {
@@ -161,6 +162,7 @@ void BLEDevice::serviceScanDone()
     connect(service, &QLowEnergyService::characteristicChanged,this, &BLEDevice::updateData);
     connect(service, &QLowEnergyService::descriptorWritten,this, &BLEDevice::confirmedDescriptorWrite);
     service->discoverDetails();
+    qDebug() << "xDXX" <<  service->characteristics().length();
 }
 
 void BLEDevice::deviceDisconnected()
@@ -173,6 +175,11 @@ void BLEDevice::deviceConnected()
 {
     qDebug() << "Device connected";
     controller->discoverServices();
+    QByteArray dataToSend = QByteArray::fromHex("0001");
+    for( auto s : controller->services())
+        qDebug() << "Found s " << s;
+
+
 }
 
 void BLEDevice::controllerError(QLowEnergyController::Error error)

@@ -10,9 +10,6 @@ Item{
     width: parent.width - 100
     anchors.horizontalCenter: parent.horizontalCenter
     height: column.height + 10
-    function dupa(){
-        console.log("dupa")
-    }
 
     Column{
         id: column
@@ -44,8 +41,6 @@ Item{
                 anchors.verticalCenter: parent.verticalCenter
             }
 
-
-
             ComboBox{
                 id: modeComboBox
                 anchors.right: parent.right
@@ -61,7 +56,6 @@ Item{
                     {value: 0, text: qsTr("Normal") },
                     {value: 1, text: qsTr("Demo") },
                     {value: 2, text: qsTr("Service") },
-                    {value: 3, text: qsTr("BLE RealTime") },
                 ]
             }
         }
@@ -89,10 +83,12 @@ Item{
         Item{
             width: 250
             height: 25
+
             Text{
                 text: "Czas prezentowania (min)"
                 anchors.verticalCenter: parent.verticalCenter
             }
+
             SpinBox{
                 stepSize: 1
                 value: config.workTime
@@ -110,10 +106,12 @@ Item{
         Item{
             width: 250
             height: 25
+
             Text{
                 text: "Czas nieaktywności (min)"
                 anchors.verticalCenter: parent.verticalCenter
             }
+
             SpinBox{
                 stepSize: 1
                 value: config.idleTime
@@ -131,10 +129,12 @@ Item{
         Item{
             width: 250
             height: 25
+
             Text{
                 text: "Aktywna od godziny"
                 anchors.verticalCenter: parent.verticalCenter
             }
+
             SpinBox{
                 stepSize: 1
                 value: config.workRangeFrom
@@ -152,10 +152,12 @@ Item{
         Item{
             width: 250
             height: 25
+
             Text{
                 text: "Aktywna do godziny"
                 anchors.verticalCenter: parent.verticalCenter
             }
+
             SpinBox{
                 stepSize: 1
                 value: config.workRangeTo
@@ -176,6 +178,7 @@ Item{
 
         Column{
             spacing: 5
+
             Repeater{
                 id: emailRepeater
                 model: ListModel{}
@@ -221,7 +224,6 @@ Item{
             }
         }
 
-
         Row{
             spacing: 10
             ToolbarButton{
@@ -236,22 +238,17 @@ Item{
                 onClicked: apiManager.getConfig(function() {
                     emailRepeater.model.clear()
                     config.mailList.forEach((element) => emailRepeater.model.append({"value": element}));
-                    ;
                     modeComboBox.currentIndex = modeComboBox.indexOfValue(config.mode)
-
                 });
             }
         }
     }
 
     function fetchConfig(){
-
         apiManager.getConfig(function() {
             emailRepeater.model.clear();
             config.mailList.forEach((element) => emailRepeater.model.append({"value": element}));
             modeComboBox.currentIndex = modeComboBox.indexOfValue(config.mode);
-
-
         });
     }
 }

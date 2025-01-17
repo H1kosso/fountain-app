@@ -32,6 +32,7 @@ private:
     QLowEnergyController *controller;
     QLowEnergyService *service;
     QLowEnergyDescriptor notificationDesc;
+
     QStringList m_foundDevices;
     QStringList m_deviceListModel;
     bool bFoundDevice;

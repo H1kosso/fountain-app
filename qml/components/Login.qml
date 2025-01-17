@@ -18,7 +18,6 @@ Item {
 
         width: 200
         height: width
-
     }
 
     Text{
@@ -75,6 +74,4 @@ Item {
             }
         }
     }
-
-
 }

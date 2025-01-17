@@ -16,7 +16,7 @@ set(QML_FILES
     qml/components/Login.qml
     qml/components/DeviceMemoryImage.qml
 
-    qml/components/gallery/ImagePreview.qml
+
     qml/components/gallery/RowDelegate.qml
     qml/components/settings/EmailDelegate.qml
     qml/components/settings/Divider.qml

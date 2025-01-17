@@ -11,6 +11,11 @@ Item {
     anchors.horizontalCenter: parent.horizontalCenter
     height: content.height
 
+    enum BrushMode{
+       Erase = 0,
+       Paint
+    }
+
     ImageInfo {
         id: customImage
         Component.onCompleted: fillImage(32);
@@ -28,7 +33,8 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             spacing: 8
 
-            property int brushMode: 1
+            property int brushMode: PaintAnimation.BrushMode.Paint
+
             Row{
                 spacing: 10
 
@@ -37,23 +43,21 @@ Item {
                     source: "../../assets/icons/paint-brush.png"
                     width: (content.width-10)/2
                     text: "Rysowanie"
-                    onClicked: paintMenu.brushMode = 1
-                    textColor: paintMenu.brushMode === 1 ? "white" : theme.textPrimary
+                    onClicked: paintMenu.brushMode = PaintAnimation.BrushMode.Paint
+                    textColor: paintMenu.brushMode === PaintAnimation.BrushMode.Paint ? "white" : theme.textPrimary
                 }
 
                 ToolbarButton {
                     width: (content.width-10)/2
                     source: "../../assets/icons/eraser.png"
                     text: "Usuwanie"
-                    onClicked: paintMenu.brushMode = 0
-                    textColor: paintMenu.brushMode === 0 ? "white" : theme.textPrimary
+                    onClicked: paintMenu.brushMode = PaintAnimation.BrushMode.Erase
+                    textColor: paintMenu.brushMode === PaintAnimation.BrushMode.Erase ? "white" : theme.textPrimary
                 }
-
             }
 
             Row{
                 spacing: 10
-
 
                 ToolbarButton {
                     width: (content.width-10)/2
@@ -68,6 +72,7 @@ Item {
                     id: brushMode
                     property int brushWidth: 1
                     spacing: 3
+
                     Repeater{
                         model: 3
                         delegate: ToolbarButton{
@@ -77,18 +82,18 @@ Item {
                             onClicked: brushMode.brushWidth = index + 1
                             textColor: brushMode.brushWidth === index + 1 ? "white" : theme.textPrimary
                         }
-
                     }
                 }
             }
+
             Column{
                 id: colorsSelect
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: 5
-                property bool mainSelected: true
-                onMainSelectedChanged: {
-                    colorPicker.value = mainSelected ? customImage.mainColor : customImage.secondaryColor
-                }
+                property bool mainColorSelected: true
+
+                onMainColorSelectedChanged: colorPicker.value = mainColorSelected ? customImage.mainColor : customImage.secondaryColor
+
                 Item{
                     width: 250
                     height: 25
@@ -104,13 +109,13 @@ Item {
                         radius: 5
                         color: customImage.mainColor
                         border.color: "white"
-                        border.width: colorsSelect.mainSelected ? 1 : 0
+                        border.width: colorsSelect.mainColorSelected ? 1 : 0
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.right: parent.right
 
                         MouseArea{
                             anchors.fill: parent
-                            onClicked: colorsSelect.mainSelected = true
+                            onClicked: colorsSelect.mainColorSelected = true
                         }
                     }
                 }
@@ -130,13 +135,13 @@ Item {
                         radius: 5
                         color: customImage.secondaryColor
                         border.color: "white"
-                        border.width: colorsSelect.mainSelected ? 0 : 1
+                        border.width: colorsSelect.mainColorSelected ? 0 : 1
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.right: parent.right
 
                         MouseArea{
                             anchors.fill: parent
-                            onClicked: colorsSelect.mainSelected = false
+                            onClicked: colorsSelect.mainColorSelected = false
                         }
                     }
                 }
@@ -182,13 +187,8 @@ Item {
             pixelSize: 25
             source: "../../assets/icons/save.png"
             text: "Zapisz"
-            onClicked: {
-
-                apiManager.addPicture(customImage.size, customImage.imageToConfigImage(), customImage.mainColor, customImage.secondaryColor)
-                console.log(customImage.binaryImage)
-            }
+            onClicked: apiManager.addPicture(customImage.size, customImage.imageToConfigImage(), customImage.mainColor, customImage.secondaryColor)
         }
-
 
         MouseArea {
             anchors.fill: column

@@ -20,16 +20,9 @@ Item {
                     config.enableWeekends = result.enableWeekends
                     config.workTime = result.workTime
                     config.idleTime = result.idleTime
-                    // config.pictureSize = result.picture.size
-                    // config.pictureData = result.picture.data
                     config.mailList = result.mailList
                     config.workRangeFrom = result.workRange.from
                     config.workRangeTo = result.workRange.to
-
-                    // var mainColor = Qt.rgba(result.picture.colors.main.r / 255, result.picture.colors.main.g / 255, result.picture.colors.main.b / 255, 1);
-                    // var secondaryColor = Qt.rgba(result.picture.colors.secondary.r / 255, result.picture.colors.secondary.g / 255, result.picture.colors.secondary.b / 255, 1);
-                    // config.main = mainColor
-                    // config.secondary = secondaryColor
 
                     if (callback) callback()
                 } else {
@@ -67,22 +60,6 @@ Item {
             "workTime": config.workTime,
             "idleTime": config.idleTime,
             "mailList": config.mailList,
-            // "picture": {
-            //     "size": config.pictureSize,
-            //     "data": config.pictureData,
-            //     "colors": {
-            //         "main":{
-            //             "r": config.main.r * 255,
-            //             "g": config.main.g * 255,
-            //             "b": config.main.b * 255,
-            //         },
-            //         "secondary":{
-            //             "r": config.secondary.r * 255,
-            //             "g": config.secondary.g * 255,
-            //             "b": config.secondary.b * 255,
-            //         }
-            //     }
-            // },
             "workRange": {
                 "from": config.workRangeFrom,
                 "to": config.workRangeTo
@@ -113,12 +90,6 @@ Item {
         request.open("POST", url + "/dashboard/login", true);
 
         request.setRequestHeader("Content-Type", "application/json");
-
-        // const data = {
-        //     "username": "at_admin",
-        //     "password": "hF7Ya8yEPLXdzGMv4swC9Ue6fb3m5c"
-        // };
-
         const data = {
             "username": username,
             "password": password
@@ -138,6 +109,7 @@ Item {
                     fountainState.mode = result.mode
                     fountainState.fluidLevel = result.fluidLevel
                     fountainState.isPresenting = result.isPresenting
+
                     if (callback) callback()
                 } else {
                     console.log("HTTP getState:", request.status, request.statusText)
@@ -162,8 +134,6 @@ Item {
                 }
             }
         }
-        // request.open("GET", url + "/dashboard/pictures", true)
-        // request.setRequestHeader("Authorization", "Bearer " + loginToken);
         request.open("GET", url + "/dashboard/pictures", true)
         request.setRequestHeader("Authorization", "Bearer " + loginToken);
 

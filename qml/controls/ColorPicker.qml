@@ -14,12 +14,15 @@ Item {
         Column {
             anchors.verticalCenter: parent.verticalCenter
             spacing: 5
+
             Row {
                 spacing: 5
+
                 Text {
                     text: "R: "
 
                 }
+
                 Slider {
                     from: 0
                     to: 1
@@ -30,6 +33,7 @@ Item {
                     }
                     width: 90
                 }
+
                 Text {
                     text: (Math.round(root.value.r * 100) / 100).toFixed(2)
                 }
@@ -37,9 +41,11 @@ Item {
 
             Row {
                 spacing: 5
+
                 Text {
                     text: "G: "
                 }
+
                 Slider {
                     from: 0
                     to: 1
@@ -51,6 +57,7 @@ Item {
                     }
                     width: 90
                 }
+
                 Text {
                     text: (Math.round(root.value.g * 100) / 100).toFixed(2)
                 }
@@ -58,9 +65,11 @@ Item {
 
             Row {
                 spacing: 5
+
                 Text {
                     text: "B: "
                 }
+
                 Slider {
                     from: 0
                     to: 1
@@ -71,6 +80,7 @@ Item {
                     }
                     width: 90
                 }
+
                 Text {
                     text: (Math.round(root.value.b * 100) / 100).toFixed(2)
                 }
@@ -99,9 +109,9 @@ Item {
                     anchors.fill: parent
                     onClicked: {
                         if(root.custom)
-                                   colorsSelect.mainSelected ? customImage.mainColor = root.value : customImage.secondaryColor = root.value
+                                   colorsSelect.mainColorSelected ? customImage.mainColor = root.value : customImage.secondaryColor = root.value
                                else
-                                   colorsSelect.mainSelected ? imageBLEConfig.mainColor = root.value : imageBLEConfig.secondaryColor = root.value
+                                   colorsSelect.mainColorSelected ? imageBLEConfig.mainColor = root.value : imageBLEConfig.secondaryColor = root.value
                 }}
             }
         }

@@ -9,11 +9,11 @@ Drawer {
         anchors.fill: parent
         color: theme.menu
     }
+
     Column{
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
         anchors.topMargin: 15
-
         spacing: 7
 
         Repeater{

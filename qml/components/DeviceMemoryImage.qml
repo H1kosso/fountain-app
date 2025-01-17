@@ -131,7 +131,6 @@ Item{
                         valueModel.append({"value": model[propertyName]})
                     }
                 }
-
             }
         }
     }

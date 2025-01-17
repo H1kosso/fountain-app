@@ -121,8 +121,6 @@ ApplicationWindow {
             id: theme
         }
 
-
-
         state: "login"
         states: [
             State{
