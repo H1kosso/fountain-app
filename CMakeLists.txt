@@ -55,6 +55,7 @@ qt_add_resources(fountain "fountain_assets"
     assets/img/preview.jfif
     assets/img/ki.jpg
 
+    assets/icons/info.png
     assets/icons/bluetooth.png
     assets/icons/clock.png
     assets/icons/close.png

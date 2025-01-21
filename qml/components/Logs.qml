@@ -31,31 +31,28 @@ Item{
             }
         }
 
-        property bool logsOn: true
 
         CustomButton {
             anchors.horizontalCenter: parent.horizontalCenter
             width: 140
             height: 30
             pixelSize: 20
-            source: column.logsOn ? "../../assets/icons/on.png" : "../../assets/icons/off.png"
-            text: column.logsOn ? "Wyłącz logi" : "Włącz logi"
-            onClicked: {
-                bledevice.writeData();
-                column.logsOn = !column.logsOn
+            source: bledevice.logsActive ? "../../assets/icons/on.png" : "../../assets/icons/off.png"
+            text: bledevice.logsActive  ? "Wyłącz logi" : "Włącz logi"
+            onClicked: bledevice.toggleLogs();
 
-            }
         }
+
         Column{
             id: logsData
-            spacing: 3
+            spacing: 5
 
 
             Repeater{
                 model: bledevice.logsListModel
 
                 delegate: Text{
-                    text: model.count
+                    text: modelData
                     color: "#3A3C3C"
                 }
             }

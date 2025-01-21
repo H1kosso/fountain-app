@@ -9,12 +9,25 @@ Drawer {
         anchors.fill: parent
         color: theme.menu
     }
+    MenuButton{
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 15
+        text: "O aplikacji"
+        source: "../../assets/icons/info.png"
+        onClicked: {
+            contentRoot.state = "about"
+            menu.close()
+        }
+    }
 
     Column{
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
         anchors.topMargin: 15
         spacing: 7
+
+
 
         Repeater{
             model: ListModel{
@@ -23,7 +36,6 @@ Drawer {
                 ListElement{ text: "Własna animacja"; value: "paintAnimation"; source: "../../assets/icons/paint.png" }
                 ListElement{ text: "Galeria"; value: "gallery"; source: "../../assets/icons/gallery.png" }
                 ListElement{ text: "Konfiguracja BLE"; value: "bluetooth"; source: "../../assets/icons/terminal.png"}
-                ListElement{ text: "O Aplikacji"; value: "about"; source: "../../assets/icons/terminal.png"}
             }
 
             delegate: MenuButton{
@@ -45,9 +57,7 @@ Drawer {
                 }
             }
         }
-        Text{
-            text: bledevice.connected
-        }
+
 
         MenuButton{
             id: scanButton
@@ -77,9 +87,21 @@ Drawer {
             width: parent.width
             Repeater{
                 model: bledevice.deviceListModel
-                delegate: Text{
-                    text: modelData
-                    font.pixelSize: 25
+                delegate: Rectangle{
+                    color: "transparent"
+                    border.width: 2
+                    border.color: "#6C757D"
+                    width: 200
+                    height: 30
+                    radius: 8
+
+                    Text{
+                        anchors.centerIn: parent
+                        text: modelData
+                        font.pixelSize: 21
+
+                    }
+
                     MouseArea{
                         onClicked: {
                             scanButton.enabled=false;
@@ -109,11 +131,11 @@ Drawer {
             appRoot.isBTconnected = true
             busyIndicator.running = false
             console.log("ConnectionStart")
-            scanButton.text = "connected"
+            scanButton.text = "Połączono"
         }
         function onConnectionEnd() {
             appRoot.isBTconnected = false
-            scanButton.text = "Rozłączono - wyszukaj ponownie"
+            scanButton.text = "Rozłączono"
             scanButton.enabled = true
             bledevice.resetDeviceListModel()
             console.log("ConnectionEnd")

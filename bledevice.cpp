@@ -12,13 +12,14 @@ BLEDevice::BLEDevice(QObject *parent) : QObject(parent),
     connect(DiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::errorOccurred, this, &BLEDevice::deviceScanError);
     connect(DiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::finished, this, &BLEDevice::scanFinished);
     connect(DiscoveryAgent, &QBluetoothDeviceDiscoveryAgent::canceled, this, &BLEDevice::scanFinished);
-    logPart = 0;
 }
 
 BLEDevice::~BLEDevice()
 {
     delete DiscoveryAgent;
     delete controller;
+    if(m_realTimeActive)
+        toggleRealTime();
 }
 
 
@@ -26,7 +27,7 @@ BLEDevice::~BLEDevice()
 void BLEDevice::addDevice(const QBluetoothDeviceInfo &device)
 {
     if (device.coreConfigurations() & QBluetoothDeviceInfo::LowEnergyCoreConfiguration) {
-        qDebug()<<"XXX Discovered Device:"<<device.name()<<"Address: "<<device.address().toString()<<"RSSI:"<< device.rssi()<<"dBm";
+        qDebug()<<"Discovered Device:"<<device.name()<<"Address: "<<device.address().toString()<<"RSSI:"<< device.rssi()<<"dBm";
 
         //if(!m_foundDevices.contains(device.name(), Qt::CaseSensitive) && device.name().contains("HTS", Qt::CaseSensitive)) {
         if(true){
@@ -47,11 +48,11 @@ void BLEDevice::scanFinished()
 void BLEDevice::deviceScanError(QBluetoothDeviceDiscoveryAgent::Error error)
 {
     if (error == QBluetoothDeviceDiscoveryAgent::PoweredOffError)
-        qDebug() << "XDX  XXX The Bluetooth adaptor is powered off.";
+        qDebug() << " The Bluetooth adaptor is powered off.";
     else if (error == QBluetoothDeviceDiscoveryAgent::InputOutputError)
-        qDebug() << "XDX  XXX Writing or reading from the device resulted in an error.";
+        qDebug() << " Writing or reading from the device resulted in an error.";
     else
-        qDebug() << "XDX  XXX An unknown error has occurred.";
+        qDebug() << " An unknown error has occurred.";
 }
 
 void BLEDevice::startScan()
@@ -66,10 +67,10 @@ void BLEDevice::startScan()
         qApp->requestPermission(permission, this, &BLEDevice::startScan);
         return;
     case Qt::PermissionStatus::Denied:
-        qDebug()<< "XXX Bluetooth permissions not granted!" ;
+        qDebug()<< "Bluetooth permissions not granted!" ;
         return;
     case Qt::PermissionStatus::Granted:
-        break; // proceed to search
+        break;
     }
     //! [permissions]
 #endif // QT_CONFIG(permissions)
@@ -79,7 +80,7 @@ void BLEDevice::startScan()
     m_foundDevices.clear();
     resetDeviceListModel();
     DiscoveryAgent->start(QBluetoothDeviceDiscoveryAgent::LowEnergyMethod);
-    qDebug()<< "XXX Searching for BLE devices..." ;
+    qDebug()<< "Searching for BLE devices..." ;
 }
 
 void BLEDevice::startConnect(int i)
@@ -118,7 +119,7 @@ void BLEDevice::serviceDiscovered(const QBluetoothUuid &gatt)
 {
     if(gatt.toString() == "{0000ffe0-0000-1000-8000-00805f9b34fb}" ) {
         bFoundDevice =true;
-        qDebug() << "XDX  XXX HM-10 service found";
+        qDebug() << " HM-10 service found";
     }
 
 }
@@ -129,12 +130,12 @@ void BLEDevice::serviceScanDone()
     service=0;
 
     if(bFoundDevice) {
-        qDebug() << "XDX  XXX Connecting to HM-10 service...";
+        qDebug() << " Connecting to HM-10 service...";
         service = controller->createServiceObject(QBluetoothUuid("{0000ffe0-0000-1000-8000-00805f9b34fb}"),this);
     }
 
     if(!service) {
-        qDebug()<< "XXX HM-10 service not found";
+        qDebug()<< "HM-10 service not found";
         disconnectFromDevice();
         return;
     }
@@ -143,18 +144,11 @@ void BLEDevice::serviceScanDone()
     connect(service, &QLowEnergyService::characteristicChanged,this, &BLEDevice::updateData);
     connect(service, &QLowEnergyService::descriptorWritten,this, &BLEDevice::confirmedDescriptorWrite);
     service->discoverDetails();
-    if (service->state() == QLowEnergyService::RemoteServiceDiscovered) {
-        qDebug() << "XDX Service details discovered.";
-    } else {
-        qDebug() << "XDX Service details not fully discovered!";
-        return;
-    }
-
 }
 
 void BLEDevice::deviceDisconnected()
 {
-    qDebug() << "XDX  XXX Remote device disconnected";
+    qDebug() << " Remote device disconnected";
     m_connected = false;
     emit connectedChanged();
     emit connectionEnd();
@@ -162,28 +156,28 @@ void BLEDevice::deviceDisconnected()
 
 void BLEDevice::deviceConnected()
 {
-    qDebug() << "XDX  XXX Device connected";
+    qDebug() << " Device connected";
     controller->discoverServices();
 }
 
 void BLEDevice::controllerError(QLowEnergyController::Error error)
 {
-    qDebug() << "XDX  XXX Controller Error:" << error;
+    qDebug() << " Controller Error:" << error;
 }
 
 void BLEDevice::serviceStateChanged(QLowEnergyService::ServiceState s)
 {
-    qDebug() << "XDX Service state changed:" << s;
+    qDebug() << "Service state changed:" << s;
     if (s == QLowEnergyService::RemoteServiceDiscovered) {
-        qDebug() << "XDX Service discovery complete. Available characteristics:";
+        qDebug() << "Service discovery complete. Available characteristics:";
         for (const QLowEnergyCharacteristic &characteristic : service->characteristics()) {
-            qDebug() << "XDX Characteristic UUID:" << characteristic.uuid().toString();
+            qDebug() << "Characteristic UUID:" << characteristic.uuid().toString();
             if (characteristic.uuid() == QBluetoothUuid("{0000ffe1-0000-1000-8000-00805f9b34fb}")) {
-                qDebug() << "XDX Found HM-10 characteristic.";
+                qDebug() << "Found HM-10 characteristic.";
             }
             // Sprawdź wszystkie desktiptory dla charakterystyki
             for (const QLowEnergyDescriptor &descriptor : characteristic.descriptors()) {
-                qDebug() << "XDX Descriptor UUID:" << descriptor.uuid().toString();
+                qDebug() << "Descriptor UUID:" << descriptor.uuid().toString();
             }
         }
     }
@@ -198,7 +192,7 @@ void BLEDevice::serviceStateChanged(QLowEnergyService::ServiceState s)
 void BLEDevice::confirmedDescriptorWrite(const QLowEnergyDescriptor &d, const QByteArray &value)
 {
     if (d.isValid() && d == notificationDesc && value == QByteArray::fromHex("0100")) {
-        qDebug() << "XDX Notification descriptor successfully written.";
+        qDebug() << "Notification descriptor successfully written.";
         controller->disconnectFromDevice();
         delete service;
         service = nullptr;
@@ -206,36 +200,36 @@ void BLEDevice::confirmedDescriptorWrite(const QLowEnergyDescriptor &d, const QB
 }
 
 
-void BLEDevice::writeData() {
-    // Definiowanie UUID charakterystyki
+void BLEDevice::writeData(QString dataString) {
     const QLowEnergyCharacteristic HM10Char = service->characteristic(QBluetoothUuid("{0000ffe1-0000-1000-8000-00805f9b34fb}"));
 
     if (HM10Char.isValid()) {
-        // Sprawdzenie, czy charakterystyka obsługuje notyfikacje
-        if (HM10Char.properties() & QLowEnergyCharacteristic::Notify) {
-            qDebug() << "XDX Characteristic supports notifications.";
-
-            // Szukaj descriptoru notyfikacji
+        // Sprawdzenie notyfikacji
+        if (!notificationsEnabled) {
             const QLowEnergyDescriptor notificationDesc = HM10Char.descriptor(QBluetoothUuid("{00002902-0000-1000-8000-00805f9b34fb}"));
             if (notificationDesc.isValid()) {
-                // Włącz notyfikacje
                 service->writeDescriptor(notificationDesc, QByteArray::fromHex("0100"));
-                qDebug() << "XDX Notifications enabled for characteristic";
+                notificationsEnabled = true;
+                qDebug() << "Notifications enabled for characteristic";
             } else {
-                qDebug() << "XDX Failed to find notification descriptor.";
+                qDebug() << "Failed to find notification descriptor.";
             }
-        } else {
-            qDebug() << "XDX Characteristic does not support notifications.";
         }
 
-        // Przesyłanie danych 0x0001 do urządzenia
-        QByteArray data = QByteArray::fromHex("0001"); // Tworzenie danych 0x0001
-        service->writeCharacteristic(HM10Char, data); // Wysłanie danych do charakterystyki
-        qDebug() << "Dane (0x0001) zostały wysłane do urządzenia."; // Debugowanie, czy dane zostały wysłane
+        // Konwersja QString na QByteArray w formacie hex
+        QByteArray data = QByteArray::fromHex(dataString.toUtf8());
+        if (!data.isEmpty()) {
+            service->writeCharacteristic(HM10Char, data);
+            qDebug() << "Dane zostały wysłane do urządzenia:" << data.toHex();
+        } else {
+            qDebug() << "Nieprawidłowy ciąg znaków. Nie można przekonwertować na dane hex.";
+        }
     } else {
-        qDebug() << "XDX Characteristic is invalid."; // Jeśli charakterystyka jest nieważna
+        qDebug() << "Characteristic is invalid.";
     }
 }
+
+
 
 
 
@@ -254,15 +248,11 @@ bool BLEDevice::connected() const
 
 void BLEDevice::addLog(QString &text)
 {
-    if (logPart < 3) {
-        logPart++;
+    if (!singleLog.endsWith("\r\n")){
         singleLog += text;
     } else {
-        logPart = 0;
-        m_logsListModel.append(singleLog);
-        qDebug() << singleLog;
+        m_logsListModel.insert(0, singleLog);
         singleLog.clear();
-        qDebug() << m_logsListModel.count();
         emit logsListModelChanged(m_logsListModel); // Emitowanie sygnału po aktualizacji
     }
 }
@@ -305,4 +295,42 @@ void BLEDevice::resetLogsListModel()
 {
     m_logsListModel.clear();
     emit logsListModelChanged(m_logsListModel);
+}
+
+bool BLEDevice::logsActive() const
+{
+    return m_logsActive;
+}
+
+void BLEDevice::setLogsActive(bool newLogsActive)
+{
+    if (m_logsActive == newLogsActive)
+        return;
+    m_logsActive = newLogsActive;
+    emit logsActiveChanged();
+}
+
+void BLEDevice::toggleLogs()
+{
+    writeData(m_logsActive ? "0000" : "0001");
+    setLogsActive(!m_logsActive);
+}
+
+void BLEDevice::toggleRealTime()
+{
+    writeData(m_realTimeActive ? "0300" : "0301");
+    setRealTimeActive(!m_realTimeActive);
+}
+
+bool BLEDevice::realTimeActive() const
+{
+    return m_realTimeActive;
+}
+
+void BLEDevice::setRealTimeActive(bool newRealTimeActive)
+{
+    if (m_realTimeActive == newRealTimeActive)
+        return;
+    m_realTimeActive = newRealTimeActive;
+    emit realTimeActiveChanged();
 }

@@ -29,17 +29,6 @@ Rectangle{
             visible: appRoot.state === "gallery"
             anchors.verticalCenter: parent.verticalCenter
         }
-
-        Text{
-            color: theme.textPrimary
-            text: appRoot.isBTconnected ? "BLE Connected"  : ""
-            font.pixelSize: 15
-            anchors.verticalCenter: parent.verticalCenter
-            MouseArea{
-                anchors.fill: parent
-                onClicked: appRoot.isBTconnected = !appRoot.isBTconnected
-            }
-        }
     }
 
     Row{

@@ -42,6 +42,17 @@ Item{
                 appRoot.state = "logs"
             }
         }
+
+        CustomButton {
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: 200
+            height: 30
+            pixelSize: 17
+            source: bledevice.realTimeActive ? "../../assets/icons/on.png" : "../../assets/icons/off.png"
+            text: bledevice.realTimeActive  ? "Wyłącz tryb Real Time" : "Włącz tryb Real Time"
+            onClicked: bledevice.toggleRealTime();
+
+        }
     }
 
     Column{
