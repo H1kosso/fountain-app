@@ -13,7 +13,7 @@ Rectangle{
         height: 35
         spacing: 10
 
-        ToolbarButton{
+        CustomButton{
             onClicked: {
                 menu.open();
             }
@@ -22,7 +22,7 @@ Rectangle{
             anchors.verticalCenter: parent.verticalCenter
         }
 
-        ToolbarButton{
+        CustomButton{
             text: "Odśwież"
             source: "../../assets/icons/refresh.png"
             onClicked: gallery.fetchPictures()
@@ -49,7 +49,7 @@ Rectangle{
         anchors.rightMargin: 15
         height: 35
 
-        ToolbarButton{
+        CustomButton{
             onClicked: {
                 appRoot.state = "login"
                 apiManager.loginToken = ""

@@ -57,8 +57,7 @@ Item {
                 width: root.width
                 height: column.height
 
-                property var pictureData: []
-                property var binaryMatrix: []
+
 
                 ImageInfo{
                     id: imageInfo
@@ -175,6 +174,9 @@ Item {
                     }
                 }
 
+                property var pictureData: []
+                property var binaryMatrix: []
+
                 Component.onCompleted:{
                     pictureData = JSON.parse(model.data);
                     binaryMatrix = pictureData.map(function(num) {
@@ -219,9 +221,12 @@ Item {
         apiManager.getAllPictures(function(pictures){
             picturesRepeater.model.clear();
             for(var i = 0 ; i < pictures.length ; i++){
+
                 var pictureData = JSON.stringify(pictures[i].data);
+
                 var main = Qt.rgba(pictures[i].colors.main.r * 255, pictures[i].colors.main.g * 255, pictures[i].colors.main.b * 255, 1);
                 var secondary = Qt.rgba(pictures[i].colors.secondary.r * 255, pictures[i].colors.secondary.g * 255, pictures[i].colors.secondary.b * 255, 1);
+
                 picturesRepeater.model.append({
                                                   "_id": pictures[i]._id,
                                                   "size": pictures[i].size,

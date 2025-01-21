@@ -211,7 +211,7 @@ Item{
                         anchors.rightMargin: 3
                     }
 
-                    ToolbarButton{
+                    CustomButton{
                         text: "Dodaj"
                         source: "../../assets/icons/add.png"
                         onClicked: {
@@ -226,13 +226,13 @@ Item{
 
         Row{
             spacing: 10
-            ToolbarButton{
+            CustomButton{
                 source: "../../../assets/icons/save.png"
                 text: "Potwierdź"
                 onClicked: apiManager.postConfig()
             }
 
-            ToolbarButton{
+            CustomButton{
                 source: "../../../assets/icons/close.png"
                 text: "Anuluj"
                 onClicked: apiManager.getConfig(function() {

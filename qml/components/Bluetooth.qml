@@ -19,7 +19,7 @@ Item{
         anchors.horizontalCenter: parent.horizontalCenter
         spacing: 10
 
-        ToolbarButton {
+        CustomButton {
             anchors.horizontalCenter: parent.horizontalCenter
             width: 200
             height: 30
@@ -31,7 +31,7 @@ Item{
             }
         }
 
-        ToolbarButton {
+        CustomButton {
             anchors.horizontalCenter: parent.horizontalCenter
             width: 200
             height: 30
@@ -84,7 +84,7 @@ Item{
             }
         }
 
-        ToolbarButton {
+        CustomButton {
             anchors.horizontalCenter: parent.horizontalCenter
             width: 100
             height: 30

@@ -16,6 +16,7 @@ set(QML_FILES
     qml/components/Login.qml
     qml/components/DeviceMemoryImage.qml
     qml/components/Logs.qml
+    qml/components/About.qml
 
 
     qml/components/gallery/RowDelegate.qml
@@ -28,7 +29,7 @@ set(QML_FILES
     qml/utils/ImageInfo.qml
 
     qml/controls/MenuButton.qml
-    qml/controls/ToolbarButton.qml
+    qml/controls/CustomButton.qml
     qml/controls/ColorPicker.qml
     qml/controls/CustomTextInput.qml
 )

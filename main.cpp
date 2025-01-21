@@ -12,13 +12,8 @@ int main(int argc, char *argv[])
 
     BLEDevice bledevice;
 
-
     app.setWindowIcon(QIcon(":/assets/icons/fountain.png"));
     engine.rootContext()->setContextProperty("bledevice", &bledevice);
-    qDebug() << "My build Version String is - "
-             << QSslSocket::sslLibraryBuildVersionString() << "  "
-                                                              " and version string is  "
-             << QSslSocket::sslLibraryVersionString();
 
     const QUrl url(u"qrc:/main.qml"_qs);
     QObject::connect(

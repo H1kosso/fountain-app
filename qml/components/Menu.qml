@@ -22,7 +22,8 @@ Drawer {
                 ListElement{ text: "Ustawienia"; value: "settings"; source: "../../assets/icons/settings.png" }
                 ListElement{ text: "Własna animacja"; value: "paintAnimation"; source: "../../assets/icons/paint.png" }
                 ListElement{ text: "Galeria"; value: "gallery"; source: "../../assets/icons/gallery.png" }
-                ListElement{ text: "Bluetooth"; value: "bluetooth"; source: "../../assets/icons/terminal.png"}
+                ListElement{ text: "Konfiguracja BLE"; value: "bluetooth"; source: "../../assets/icons/terminal.png"}
+                ListElement{ text: "O Aplikacji"; value: "about"; source: "../../assets/icons/terminal.png"}
             }
 
             delegate: MenuButton{
@@ -43,6 +44,9 @@ Drawer {
                     }
                 }
             }
+        }
+        Text{
+            text: bledevice.connected
         }
 
         MenuButton{

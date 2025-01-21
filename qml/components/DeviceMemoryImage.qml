@@ -21,7 +21,7 @@ Item{
             spacing: 5
             anchors.horizontalCenter: parent.horizontalCenter
 
-            ToolbarButton {
+            CustomButton {
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: 130
                 height: 30
@@ -33,7 +33,7 @@ Item{
                 }
             }
 
-            ToolbarButton {
+            CustomButton {
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: 130
                 height: 30
@@ -45,7 +45,7 @@ Item{
                 }
             }
 
-            ToolbarButton {
+            CustomButton {
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: 130
                 height: 30
@@ -55,7 +55,7 @@ Item{
             }
         }
         Column{
-            id: colorsSelect
+            id: colorsSelectDevice
             anchors.horizontalCenter: parent.horizontalCenter
             spacing: 5
             property bool mainSelected: true
@@ -77,13 +77,13 @@ Item{
                     radius: 5
                     color: imageBLEConfig.mainColor
                     border.color: "white"
-                    border.width: colorsSelect.mainSelected ? 1 : 0
+                    border.width: colorsSelectDevice.mainSelected ? 1 : 0
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.right: parent.right
 
                     MouseArea{
                         anchors.fill: parent
-                        onClicked: colorsSelect.mainSelected = true
+                        onClicked: colorsSelectDevice.mainSelected = true
                     }
                 }
             }
@@ -102,13 +102,13 @@ Item{
                     radius: 5
                     color: imageBLEConfig.secondaryColor
                     border.color: "white"
-                    border.width: colorsSelect.mainSelected ? 0 : 1
+                    border.width: colorsSelectDevice.mainSelected ? 0 : 1
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.right: parent.right
 
                     MouseArea{
                         anchors.fill: parent
-                        onClicked: colorsSelect.mainSelected = false
+                        onClicked: colorsSelectDevice.mainSelected = false
                     }
                 }
             }

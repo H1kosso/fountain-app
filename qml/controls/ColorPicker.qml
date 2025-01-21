@@ -109,9 +109,9 @@ Item {
                     anchors.fill: parent
                     onClicked: {
                         if(root.custom)
-                                   colorsSelect.mainColorSelected ? customImage.mainColor = root.value : customImage.secondaryColor = root.value
+                                   colorsSelectPaint.mainColorSelected ? customImage.mainColor = root.value : customImage.secondaryColor = root.value
                                else
-                                   colorsSelect.mainColorSelected ? imageBLEConfig.mainColor = root.value : imageBLEConfig.secondaryColor = root.value
+                                   colorsSelectDevice.mainSelected ? imageBLEConfig.mainColor = root.value : imageBLEConfig.secondaryColor = root.value
                 }}
             }
         }

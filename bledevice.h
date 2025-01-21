@@ -14,16 +14,27 @@
 
 #include "deviceinfo.h"
 
+#pragma pack (0)
+
 class BLEDevice : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QStringList deviceListModel READ deviceListModel WRITE setDeviceListModel RESET resetDeviceListModel NOTIFY deviceListModelChanged)
+    Q_PROPERTY(QStringList logsListModel READ logsListModel WRITE setLogsListModel RESET resetLogsListModel NOTIFY logsListModelChanged)
+    Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
 
 public:
     explicit BLEDevice(QObject *parent = nullptr);
     ~BLEDevice();
 
     QStringList deviceListModel();
+    QStringList logsListModel();
+
+    bool connected() const;
+
+
+
+
 
 private:
     DeviceInfo currentDevice;
@@ -32,14 +43,18 @@ private:
     QLowEnergyController *controller;
     QLowEnergyService *service;
     QLowEnergyDescriptor notificationDesc;
-
+    bool bFoundDevice;
     QStringList m_foundDevices;
     QStringList m_deviceListModel;
-    bool bFoundDevice;
-public slots:
-    void sendHexData(const QByteArray &data); // Nowa metoda do wysyłania danych
+    bool m_connected;
+
+    QStringList m_logsListModel;
+    unsigned int logPart;
+    QString singleLog;
 
 private slots:
+    void addLog(QString &);
+
     /* Slots for QBluetothDeviceDiscoveryAgent */
     void addDevice(const QBluetoothDeviceInfo &);
     void scanFinished();
@@ -62,17 +77,23 @@ public slots:
     void startScan();
     void startConnect(int);
     void disconnectFromDevice();
-    void writeData(QByteArray);
+    void writeData();
     void setDeviceListModel(QStringList);
     void resetDeviceListModel();
+    void setLogsListModel(QStringList);
+    void resetLogsListModel();
 
 signals:
     /* Signals for user */
+    void newTemperature(QList<QVariant>);
+    void newIntermediateTemperature(QList<QVariant>);
     void scanningFinished();
     void connectionStart();
     void connectionEnd();
     void deviceListModelChanged(QStringList);
 
+    void connectedChanged();
+    void logsListModelChanged(QStringList);
 };
 
 #endif // BLEDEVICE_H

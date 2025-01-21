@@ -19,7 +19,7 @@ Item{
         anchors.horizontalCenter: parent.horizontalCenter
         spacing: 10
 
-        ToolbarButton {
+        CustomButton {
             anchors.horizontalCenter: parent.horizontalCenter
             width: 140
             height: 30
@@ -33,14 +33,18 @@ Item{
 
         property bool logsOn: true
 
-        ToolbarButton {
+        CustomButton {
             anchors.horizontalCenter: parent.horizontalCenter
             width: 140
             height: 30
             pixelSize: 20
             source: column.logsOn ? "../../assets/icons/on.png" : "../../assets/icons/off.png"
             text: column.logsOn ? "Wyłącz logi" : "Włącz logi"
-            onClicked: column.logsOn = !column.logsOn
+            onClicked: {
+                bledevice.writeData();
+                column.logsOn = !column.logsOn
+
+            }
         }
         Column{
             id: logsData
@@ -48,98 +52,10 @@ Item{
 
 
             Repeater{
-                model: ListModel{
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                    ListElement{text: "10:40:23 [DEBUG] Mode selected: Demo"}
-                }
+                model: bledevice.logsListModel
 
                 delegate: Text{
-                    text: model.text
+                    text: model.count
                     color: "#3A3C3C"
                 }
             }

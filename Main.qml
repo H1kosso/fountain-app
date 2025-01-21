@@ -16,7 +16,7 @@ ApplicationWindow {
     title: qsTr("Fountain app")
     property alias state: contentRoot.state
 
-    property bool isBTconnected: true
+    property bool isBTconnected: false
 
     header: Toolbar{
         id: toolbar
@@ -74,15 +74,21 @@ ApplicationWindow {
             id: contentFlickable
             anchors.fill: parent
             flickableDirection: Flickable.VerticalFlick
-            boundsBehavior: appRoot.state === "gallery" ? Flickable.DragAndOvershootBounds : Flickable.StopAtBounds
+            boundsBehavior: appRoot.state === "gallery" || appRoot.state === "settings" ? Flickable.DragAndOvershootBounds : Flickable.StopAtBounds
             contentHeight: contentColumn.height
 
             onFlickStarted: {
-                if (verticalOvershoot <= 50)
-                {
-                    apiManager.getAllPictures()
+                if(appRoot.state === "gallery"){
+                    if (verticalOvershoot <= 50)
+                    {
+                        gallery.fetchPictures()
+                    }
                 }
-
+                else if(appRoot.state === "settings"){
+                    if (verticalOvershoot <= 50)
+                    {
+                        settings.fetchConfig()                    }
+                }
             }
 
             Column{
@@ -128,6 +134,11 @@ ApplicationWindow {
                     id: logs
                     visible: false
                 }
+
+                About{
+                    id: about
+                    visible: true
+                }
             }
         }
         MyTheme{
@@ -169,6 +180,10 @@ ApplicationWindow {
             State{
                 name: "logs"
                 PropertyChanges { target: logs; visible: true}
+            },
+            State{
+                name: "about"
+                PropertyChanges { target: about; visible: true}
             }
         ]
     }

@@ -12,7 +12,7 @@ import QtQuick
 
 QtObject{
     property color toolbar: "#ADB5BD"
-    property color toolbarButton: "#6C757D"
+    property color customButton: "#6C757D"
 
     property color menu: "#CED4DA"
     property color menuButton: "#ADB5BD"

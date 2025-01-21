@@ -39,7 +39,7 @@ Item {
                 spacing: 10
 
 
-                ToolbarButton {
+                CustomButton {
                     source: "../../assets/icons/paint-brush.png"
                     width: (content.width-10)/2
                     text: "Rysowanie"
@@ -47,7 +47,7 @@ Item {
                     textColor: paintMenu.brushMode === PaintAnimation.BrushMode.Paint ? "white" : theme.textPrimary
                 }
 
-                ToolbarButton {
+                CustomButton {
                     width: (content.width-10)/2
                     source: "../../assets/icons/eraser.png"
                     text: "Usuwanie"
@@ -59,7 +59,7 @@ Item {
             Row{
                 spacing: 10
 
-                ToolbarButton {
+                CustomButton {
                     width: (content.width-10)/2
                     source: "../../assets/icons/add.png"
                     text: "Dodaj 5 wierszy"
@@ -75,7 +75,7 @@ Item {
 
                     Repeater{
                         model: 3
-                        delegate: ToolbarButton{
+                        delegate: CustomButton{
                             width: ((content.width-10)/2 - 9)/3
                             text: index + 1
                             source: "../../assets/icons/paint-brush" + (index+1) +".png"
@@ -87,7 +87,7 @@ Item {
             }
 
             Column{
-                id: colorsSelect
+                id: colorsSelectPaint
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: 5
                 property bool mainColorSelected: true
@@ -109,13 +109,13 @@ Item {
                         radius: 5
                         color: customImage.mainColor
                         border.color: "white"
-                        border.width: colorsSelect.mainColorSelected ? 1 : 0
+                        border.width: colorsSelectPaint.mainColorSelected ? 1 : 0
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.right: parent.right
 
                         MouseArea{
                             anchors.fill: parent
-                            onClicked: colorsSelect.mainColorSelected = true
+                            onClicked: colorsSelectPaint.mainColorSelected = true
                         }
                     }
                 }
@@ -135,13 +135,13 @@ Item {
                         radius: 5
                         color: customImage.secondaryColor
                         border.color: "white"
-                        border.width: colorsSelect.mainColorSelected ? 0 : 1
+                        border.width: colorsSelectPaint.mainColorSelected ? 0 : 1
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.right: parent.right
 
                         MouseArea{
                             anchors.fill: parent
-                            onClicked: colorsSelect.mainColorSelected = false
+                            onClicked: colorsSelectPaint.mainColorSelected = false
                         }
                     }
                 }
@@ -178,7 +178,7 @@ Item {
             }
         }
 
-        ToolbarButton {
+        CustomButton {
             anchors.top: column.bottom
             anchors.topMargin: 10
             anchors.horizontalCenter: parent.horizontalCenter

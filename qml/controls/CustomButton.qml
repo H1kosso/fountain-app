@@ -17,7 +17,7 @@ MouseArea{
         id: rect
         anchors.fill: parent
         radius: 6
-        color: theme.toolbarButton
+        color: theme.customButton
 
         Row{
             id: row
