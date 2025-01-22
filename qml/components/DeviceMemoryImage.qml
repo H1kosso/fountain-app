@@ -52,6 +52,11 @@ Item{
                 pixelSize: 20
                 source: "../../assets/icons/bt-upload.png"
                 text: "Zapisz"
+                onClicked: {
+                    bledevice.parseQMLImageToBLE(imageBLEConfig.size, imageBLEConfig.pictureData, imageBLEConfig.mainColor, imageBLEConfig.secondaryColor)
+                    bledevice.sendImage();
+                }
+
             }
         }
         Column{

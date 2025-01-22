@@ -80,7 +80,7 @@ Item{
             CustomTextInput{
                 id: ssid
                 width: parent.width
-                text: "XDXD"
+                text: ""
             }
         }
 
@@ -95,7 +95,7 @@ Item{
             CustomTextInput{
                 id: password
                 width: parent.width
-                text: "DOMCIA"
+                text: ""
             }
         }
 

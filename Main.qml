@@ -137,7 +137,7 @@ ApplicationWindow {
 
                 About{
                     id: about
-                    visible: true
+                    visible: false
                 }
             }
         }

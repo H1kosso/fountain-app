@@ -31,7 +31,7 @@ Item {
         }
 
         Text{
-            visible: appRoot.isBTconnected && config.mode === 3
+            visible: bledevice.connected && bledevice.realTimeActive
             anchors.horizontalCenter: parent.horizontalCenter
             text: "Przycisk <b>Play</b> pozwala wyświetlić wybrany obraz w czasie rzeczywistym"
             wrapMode: Text.Wrap

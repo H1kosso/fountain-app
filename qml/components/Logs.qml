@@ -31,7 +31,6 @@ Item{
             }
         }
 
-
         CustomButton {
             anchors.horizontalCenter: parent.horizontalCenter
             width: 140
@@ -40,20 +39,6 @@ Item{
             source: bledevice.logsActive ? "../../assets/icons/on.png" : "../../assets/icons/off.png"
             text: bledevice.logsActive  ? "Wyłącz logi" : "Włącz logi"
             onClicked: bledevice.toggleLogs();
-
-        }
-
-        CustomButton {
-            anchors.horizontalCenter: parent.horizontalCenter
-            width: 140
-            height: 30
-            pixelSize: 20
-            text: "Config"
-            onClicked: {
-                bledevice.parseQmlConfigToBLE(config.mode, config.enableWeekends, config.workTime, config.idleTime, config.workRangeFrom, config.workRangeTo)
-                bledevice.updateConfigOnDevice();
-            }
-
         }
 
 

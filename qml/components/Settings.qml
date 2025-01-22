@@ -229,7 +229,11 @@ Item{
             CustomButton{
                 source: "../../../assets/icons/save.png"
                 text: "Potwierdź"
-                onClicked: apiManager.postConfig()
+                onClicked: {
+                    apiManager.postConfig();
+                    if(bledevice.connected)
+                        bledevice.updateConfigOnDevice();
+                }
             }
 
             CustomButton{

@@ -110,6 +110,8 @@ void BLEDevice::disconnectFromDevice()
 {
 
     if (controller->state() != QLowEnergyController::UnconnectedState) {
+        if(m_realTimeActive)
+            toggleRealTime();
         controller->disconnectFromDevice();
     } else {
         deviceDisconnected();
