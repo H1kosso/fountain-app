@@ -78,7 +78,9 @@ Item{
                 color: "#3A3C3C"
             }
             CustomTextInput{
+                id: ssid
                 width: parent.width
+                text: "XDXD"
             }
         }
 
@@ -91,7 +93,9 @@ Item{
                 color: "#3A3C3C"
             }
             CustomTextInput{
+                id: password
                 width: parent.width
+                text: "DOMCIA"
             }
         }
 
@@ -102,6 +106,10 @@ Item{
             pixelSize: 20
             source: "../../assets/icons/save.png"
             text: "Zapisz"
+            onClicked: {
+                bledevice.parseQmlWifiToBLE(ssid.text, password.text)
+                bledevice.updateWifiOnDevice()
+            }
         }
     }
 }

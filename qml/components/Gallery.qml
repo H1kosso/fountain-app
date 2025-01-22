@@ -144,7 +144,9 @@ Item {
                         MouseArea{
                             anchors.fill: parent
                             onClicked: {
-                                console.log("TODO play on device")
+                                imageInfo.pictureData = delegateImage.pictureData
+                                bledevice.parseQMLImageToBLE(imageInfo.size, delegateImage.pictureData, imageInfo.mainColor, imageInfo.secondaryColor)
+                                bledevice.sendImage();
                             }
                         }
                     }

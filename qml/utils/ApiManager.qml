@@ -10,6 +10,7 @@ Item {
 
     function getConfig(callback) {
         const request = new XMLHttpRequest()
+
         request.onreadystatechange = function() {
             if (request.readyState === XMLHttpRequest.DONE) {
                 if (request.status && request.status === 200) {
@@ -53,7 +54,7 @@ Item {
 
         request.setRequestHeader("Content-Type", "application/json");
         request.setRequestHeader("Authorization", "Bearer " + loginToken);
-        console.log(config.mode)
+
         const data = {
             "mode": config.mode,
             "enableWeekends": config.enableWeekends,
@@ -65,6 +66,7 @@ Item {
                 "to": config.workRangeTo
             }
         };
+
         request.send(JSON.stringify(data));
         console.log(JSON.stringify(data))
     }

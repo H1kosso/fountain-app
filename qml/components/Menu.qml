@@ -85,6 +85,7 @@ Drawer {
         Column {
             id: bleDevicesView
             width: parent.width
+            spacing: 5
             Repeater{
                 model: bledevice.deviceListModel
                 delegate: Rectangle{

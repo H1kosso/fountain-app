@@ -6,6 +6,9 @@
 #include <QBluetoothDeviceInfo>
 #include <QLowEnergyController>
 #include <QLowEnergyService>
+#include <QIODevice>
+#include <QtEndian>
+#include <QColor>
 
 #if QT_CONFIG(permissions)
 #include <QtCore/qcoreapplication.h>
@@ -14,7 +17,63 @@
 
 #include "deviceinfo.h"
 
-#pragma pack(0)
+#pragma pack( 1 )
+
+typedef struct
+{
+    uint8_t  waterscreenMode;
+    bool     isWorkingDuringWeekends;
+    uint16_t workTimeInStandardMode;
+    uint16_t idleTimeInStandardMode;
+    uint8_t  workFrom;
+    uint8_t  workTo;
+} SerializedConfiguration_t;
+
+#pragma pack( 0 )
+
+#pragma pack( 1 )
+
+typedef struct
+{
+    uint8_t ssidSize;
+    uint8_t passwordSize;
+    uint8_t ssid[100];
+    uint8_t password[100];
+} WifiCredentials_t;
+
+#pragma pack( 0 )
+
+#pragma pack( 1 )
+
+typedef struct
+{
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
+} SerializedColorRGB_t;
+
+#pragma pack( 0 )
+
+#pragma pack( 1 )
+
+typedef struct
+{
+    SerializedColorRGB_t main;
+    SerializedColorRGB_t secondary;
+} SerializedPictureColors_t;
+
+#pragma pack( 0 )
+
+#pragma pack( 1 )
+
+typedef struct
+{
+    uint32_t size;
+    uint64_t picture[256];
+
+} PictureData;
+
+#pragma pack( 0 )
 
 class BLEDevice : public QObject
 {
@@ -46,6 +105,12 @@ public:
 
     Q_INVOKABLE void toggleLogs();
     Q_INVOKABLE void toggleRealTime();
+    Q_INVOKABLE void updateConfigOnDevice();
+    Q_INVOKABLE void parseQmlConfigToBLE(uint8_t mode, bool isWorkingDruingWeekend, uint16_t workTime, uint16_t idleTime, uint8_t workFrom, uint8_t workTo);
+    Q_INVOKABLE void parseQmlWifiToBLE(QString ssid, QString password);
+    Q_INVOKABLE void parseQMLImageToBLE(uint32_t size, const QVariantList &pictureData, QColor main, QColor secondary);
+    Q_INVOKABLE void updateWifiOnDevice();
+    Q_INVOKABLE void sendImage();
 
 private:
     // Private Variables
@@ -54,6 +119,11 @@ private:
     bool m_connected = false;
     bool m_logsActive = false;
     bool m_realTimeActive = false;
+
+    SerializedConfiguration_t m_config;
+    WifiCredentials_t m_wifi;
+    SerializedPictureColors_t m_colors;
+    PictureData m_picture;
 
     DeviceInfo currentDevice;
     QBluetoothDeviceDiscoveryAgent *DiscoveryAgent = nullptr;
@@ -87,6 +157,9 @@ private:
     void updateData(const QLowEnergyCharacteristic &, const QByteArray &);
     void confirmedDescriptorWrite(const QLowEnergyDescriptor &, const QByteArray &);
 
+    void writeWifi(const WifiCredentials_t &wifi);
+    void writeConfiguration(const SerializedConfiguration_t &config);
+    void writeImage(const SerializedPictureColors_t &colors, const PictureData &picture);
 public slots:
     // Slots for user interactions
     void startScan();
