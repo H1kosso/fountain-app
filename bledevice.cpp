@@ -30,8 +30,8 @@ void BLEDevice::addDevice(const QBluetoothDeviceInfo &device)
     if (device.coreConfigurations() & QBluetoothDeviceInfo::LowEnergyCoreConfiguration) {
         qDebug()<<"Discovered Device:"<<device.name()<<"Address: "<<device.address().toString()<<"RSSI:"<< device.rssi()<<"dBm";
 
-        //if(!m_foundDevices.contains(device.name(), Qt::CaseSensitive) && device.name().contains("HTS", Qt::CaseSensitive)) {
-        if(true){
+        if(!m_foundDevices.contains(device.name(), Qt::CaseSensitive) && device.name().contains("KI", Qt::CaseSensitive)) {
+        //if(true){
             m_foundDevices.append(device.name());
 
             DeviceInfo *dev = new DeviceInfo(device);
@@ -103,7 +103,6 @@ void BLEDevice::startConnect(int i)
     connect(controller, &QLowEnergyController::connected, this, &BLEDevice::deviceConnected);
     connect(controller, &QLowEnergyController::disconnected, this, &BLEDevice::deviceDisconnected);
     controller->connectToDevice();
-
 }
 
 void BLEDevice::disconnectFromDevice()
@@ -178,7 +177,7 @@ void BLEDevice::serviceStateChanged(QLowEnergyService::ServiceState s)
             if (characteristic.uuid() == QBluetoothUuid("{0000ffe1-0000-1000-8000-00805f9b34fb}")) {
                 qDebug() << "Found HM-10 characteristic.";
             }
-            // Sprawdź wszystkie desktiptory dla charakterystyki
+
             for (const QLowEnergyDescriptor &descriptor : characteristic.descriptors()) {
                 qDebug() << "Descriptor UUID:" << descriptor.uuid().toString();
             }
@@ -210,7 +209,6 @@ void BLEDevice::writeData(QString dataString) {
     const QLowEnergyCharacteristic HM10Char = service->characteristic(QBluetoothUuid("{0000ffe1-0000-1000-8000-00805f9b34fb}"));
 
     if (HM10Char.isValid()) {
-        // Sprawdzenie notyfikacji
         if (!notificationsEnabled) {
             const QLowEnergyDescriptor notificationDesc = HM10Char.descriptor(QBluetoothUuid("{00002902-0000-1000-8000-00805f9b34fb}"));
             if (notificationDesc.isValid()) {
@@ -222,7 +220,6 @@ void BLEDevice::writeData(QString dataString) {
             }
         }
 
-        // Konwersja QString na QByteArray w formacie hex
         QByteArray data = QByteArray::fromHex(dataString.toUtf8());
         if (!data.isEmpty()) {
             service->writeCharacteristic(HM10Char, data);
@@ -238,15 +235,14 @@ void BLEDevice::writeData(QString dataString) {
 void BLEDevice::updateData(const QLowEnergyCharacteristic &c, const QByteArray &v)
 {
     QString receivedData = QString::fromUtf8(v);
-    singleLog += receivedData; // Append incoming data to singleLog
+    singleLog += receivedData;
 
-    // Process complete messages
     while (singleLog.contains("\r\n")) {
-        int index = singleLog.indexOf("\r\n"); // Find the end of the first complete message
-        QString completeMessage = singleLog.left(index); // Extract the complete message
-        singleLog.remove(0, index + 2); // Remove the processed message and "\r\n"
+        int index = singleLog.indexOf("\r\n");
+        QString completeMessage = singleLog.left(index);
+        singleLog.remove(0, index + 2);
 
-        addLog(completeMessage); // Pass the complete message to addLog
+        addLog(completeMessage);
     }
 }
 
@@ -259,8 +255,8 @@ bool BLEDevice::connected() const
 void BLEDevice::addLog(QString &text)
 {
     if (!text.isEmpty()) {
-        m_logsListModel.insert(0, text); // Insert the log into the list
-        emit logsListModelChanged(m_logsListModel); // Emit the signal
+        m_logsListModel.insert(0, text);
+        emit logsListModelChanged(m_logsListModel);
     }
 }
 
@@ -358,13 +354,12 @@ void BLEDevice::writeConfiguration(const SerializedConfiguration_t &config) {
         stream << static_cast<uint8_t>(0x01);
 
         stream << config.waterscreenMode;
-        stream << static_cast<uint8_t>(config.isWorkingDuringWeekends ? 1 : 0); // bool jako uint8_t
+        stream << static_cast<uint8_t>(config.isWorkingDuringWeekends ? 1 : 0);
         stream << config.workTimeInStandardMode;
         stream << config.idleTimeInStandardMode;
         stream << config.workFrom;
         stream << config.workTo;
 
-        // Wysłanie danych do urządzenia
         if (!data.isEmpty()) {
             service->writeCharacteristic(HM10Char, data);
             qDebug() << "Dane zostały wysłane do urządzenia (little-endian):" << data.toHex();
@@ -408,7 +403,6 @@ void BLEDevice::writeImage(const SerializedPictureColors_t &colors, const Pictur
         stream.writeRawData(reinterpret_cast<const char*>(picture.picture), picture.size * sizeof(uint64_t));
 
         if (!data.isEmpty()) {
-            // Split data into chunks of 20 bytes or less
             const int maxPacketSize = 20;
             int totalSize = data.size();
             int offset = 0;
@@ -417,12 +411,8 @@ void BLEDevice::writeImage(const SerializedPictureColors_t &colors, const Pictur
                 int chunkSize = qMin(maxPacketSize, totalSize - offset);
                 QByteArray chunk = data.mid(offset, chunkSize);
 
-                // Write the chunk
                 service->writeCharacteristic(HM10Char, chunk);
                 qDebug() << "Sent chunk of data, size:" << chunk.size();
-
-                // Wait for confirmation or handle success/failure of the write operation here
-                // (Optionally handle acknowledgment and retries if needed)
 
                 offset += chunkSize;
             }

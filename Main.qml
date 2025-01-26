@@ -11,7 +11,7 @@ import "./qml/utils"
 ApplicationWindow {
     id: appRoot
     width: 1080/3
-    height: 2340/3
+    height: 2100/3
     visible: true
     title: qsTr("Fountain app")
     property alias state: contentRoot.state

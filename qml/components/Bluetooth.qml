@@ -80,7 +80,6 @@ Item{
             CustomTextInput{
                 id: ssid
                 width: parent.width
-                text: ""
             }
         }
 
@@ -95,7 +94,6 @@ Item{
             CustomTextInput{
                 id: password
                 width: parent.width
-                text: ""
             }
         }
 
@@ -107,7 +105,7 @@ Item{
             source: "../../assets/icons/save.png"
             text: "Zapisz"
             onClicked: {
-                bledevice.parseQmlWifiToBLE(ssid.text, password.text)
+                bledevice.parseQmlWifiToBLE("ssid.text", "password.text")
                 bledevice.updateWifiOnDevice()
             }
         }

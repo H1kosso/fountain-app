@@ -124,5 +124,5 @@ endif()
 endif()
 # TODO REPLACE PATH
 if (ANDROID)
-    include(C:/Users/Marcin/AppData/Local/Android/Sdk/android_openssl/CMakeLists.txt)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/android-openssl/CMakeLists.txt)
 endif()

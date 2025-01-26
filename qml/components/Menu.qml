@@ -86,6 +86,7 @@ Drawer {
             id: bleDevicesView
             width: parent.width
             spacing: 5
+            visible: !bledevice.connected
             Repeater{
                 model: bledevice.deviceListModel
                 delegate: Rectangle{
@@ -98,7 +99,7 @@ Drawer {
 
                     Text{
                         anchors.centerIn: parent
-                        text: modelData
+                        text: "WS-driver"//modelData
                         font.pixelSize: 21
 
                     }

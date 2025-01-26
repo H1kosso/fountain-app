@@ -6,7 +6,6 @@ Item {
     property string url: "http://at-waterscreen.ddnsking.com/api"
 
     property string loginToken: ""
-    property string loginLocalToken: ""
 
     function getConfig(callback) {
         const request = new XMLHttpRequest()
@@ -14,7 +13,7 @@ Item {
         request.onreadystatechange = function() {
             if (request.readyState === XMLHttpRequest.DONE) {
                 if (request.status && request.status === 200) {
-                    console.log("getConfig response", request.responseText)
+                    console.log("Get Config response", request.responseText)
                     var result = JSON.parse(request.responseText)
 
                     config.mode = result.mode
@@ -77,7 +76,7 @@ Item {
         request.onreadystatechange = function() {
             if (request.readyState === XMLHttpRequest.DONE) {
                 if (request.status && request.status === 200) {
-                    console.log("login response", request.responseText);
+                    console.log("Login response", request.responseText);
                     var result = JSON.parse(request.responseText)
 
                     loginToken = result.token
